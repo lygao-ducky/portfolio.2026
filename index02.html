@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liyi Gao | Aspiring Product Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --card-bg: #141414;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f0f0f0;
+            --text-muted: #888888;
+            --accent: #dcf836;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; padding: 2rem 5%; }
+        h1, h2, h3, .heading-font { font-family: 'Space Grotesk', sans-serif; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0 3rem 0; border-bottom: 1px solid var(--card-border); margin-bottom: 3rem; }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; }
+        .nav-tags span { font-size: 0.85rem; color: var(--text-muted); border: 1px solid var(--card-border); padding: 0.4rem 1rem; border-radius: 20px; margin-left: 0.5rem; }
+
+        .hero { display: flex; align-items: center; gap: 4rem; margin-bottom: 5rem; }
+        .hero-text h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -2px; }
+        .hero-text p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; }
+        .hero-image { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 2px solid var(--card-border); filter: grayscale(100%); transition: filter 0.5s ease; }
+        .hero-image:hover { filter: grayscale(0%); }
+
+        .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(280px, auto); gap: 1.5rem; margin-bottom: 5rem; }
+        .bento-card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 2rem; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
+        .bento-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-color: rgba(255, 255, 255, 0.3); }
+        .card-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 1rem; font-weight: 600; }
+        .bento-card h3 { font-size: 1.8rem; margin-bottom: 1rem; line-height: 1.2; }
+        .bento-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .card-large { grid-column: span 4; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+        .card-medium { grid-column: span 2; }
+        
+        /* O2O 项目专属 Logo 样式 */
+        .project-logo { width: 60px; height: 60px; object-fit: contain; border-radius: 12px; margin-bottom: 1rem; background-color: #fff; padding: 5px; }
+
+        .data-highlight { color: var(--text-main); font-size: 2.5rem; font-weight: 700; display: block; margin-top: 1rem; font-family: 'Space Grotesk', sans-serif; }
+        .data-highlight span { color: var(--accent); }
+
+        /* 滑动图片展示区 (Carousel) */
+        .slider-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-snap-type: x mandatory; margin-top: 1.5rem; }
+        /* 自定义滚动条 */
+        .slider-container::-webkit-scrollbar { height: 8px; }
+        .slider-container::-webkit-scrollbar-track { background: #222; border-radius: 10px; }
+        .slider-container::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
+        
+        .slider-container img { 
+            height: 280px; 
+            width: auto; 
+            object-fit: contain; /* 保证图片不拉伸 */
+            border-radius: 12px; 
+            scroll-snap-align: start; 
+            border: 1px solid var(--card-border);
+            background-color: #000; /* 填充背景色防黑边 */
+        }
+
+        /* 普通图片网格 */
+        .img-grid { display: flex; gap: 10px; margin-top: 1.5rem; overflow: hidden; height: 100%; }
+        .img-grid img { width: 100%; height: 220px; border-radius: 12px; opacity: 0.85; transition: opacity 0.3s ease; }
+        .img-grid img:hover { opacity: 1; }
+        
+        /* 针对不同图片的裁剪优化类 */
+        .img-top { object-fit: cover; object-position: top center; } /* 优先保留上半部分，防止裁脸 */
+        .img-contain { object-fit: contain; background-color: #0a0a0a; } /* 完整保留图片，防止裁字 */
+
+        /* 职业经历列表 - 带 Logo 版本 */
+        .experience-section { border-top: 1px solid var(--card-border); padding-top: 3rem; margin-bottom: 5rem; max-width: 900px; margin-left: auto; margin-right: auto; }
+        .exp-item { display: grid; grid-template-columns: 1fr 3fr; gap: 2rem; margin-bottom: 3.5rem; }
+        .exp-date { color: var(--text-muted); font-family: 'Space Grotesk', sans-serif; text-align: right; margin-top: 10px; }
+        
+        .exp-content-header { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 1rem; }
+        .company-logo { width: 56px; height: 56px; border-radius: 12px; object-fit: contain; background-color: #fff; padding: 4px; border: 1px solid var(--card-border); flex-shrink: 0; }
+        
+        .exp-content h4 { font-size: 1.4rem; margin-bottom: 0.2rem; }
+        .exp-content h5 { color: var(--accent); font-weight: 500; }
+        .exp-content ul { padding-left: 1.2rem; color: var(--text-muted); }
+        .exp-content li { margin-bottom: 0.5rem; }
+        
+        /* 活动图片占位 */
+        .event-image { width: 100%; max-width: 400px; height: 200px; border-radius: 12px; object-fit: cover; margin-top: 1rem; border: 1px dashed var(--card-border); }
+
+        @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } .card-large { grid-column: span 2; grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .hero { flex-direction: column-reverse; gap: 2rem; } .bento-grid { grid-template-columns: 1fr; } .card-large, .card-medium { grid-column: span 1; } .exp-item { grid-template-columns: 1fr; gap: 0.5rem; } .exp-date { text-align: left; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Liyi GAO.</div>
+        <div class="nav-tags">
+            <span>Trilingual</span>
+            <span>Audencia PGE '26</span>
+            <span>Available July 2026</span>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-text">
+            <h1>Building O2O ecosystems.<br>Exploring AI.<br><span style="color: var(--accent);">Aspiring PM.</span></h1>
+            <p>From curating brands at age 15 to architecting a zero-to-one campus delivery network. I blend business intuition with data-driven workflows to solve real user problems.</p>
+        </div>
+        <img src="https://picui.ogmua.cn/s1/2026/03/04/69a853201c1d9.webp" alt="Liyi Gao" class="hero-image">
+    </header>
+
+    <main class="bento-grid">
+
+        <div class="bento-card card-large">
+            <div>
+                <img src="https://via.placeholder.com/150x150/ffffff/000000?text=Logo" alt="Project Logo" class="project-logo">
+                
+                <div class="card-tag">0 to 1 Flagship Project</div>
+                <h3>Architecting a Campus O2O Ecosystem</h3>
+                <p>Founded a new digital business model featuring online ordering and offline delivery services. Designed the frictionless front-end UI and built the backend demand forecasting logic to mitigate seasonal risks and optimize supply chain efficiency.</p>
+                
+                <div style="display: flex; gap: 2rem; margin-top: 1.5rem;">
+                    <div><span class="data-highlight"><span>400</span>+</span><p style="font-size: 0.8rem;">Monthly Active Users</p></div>
+                    <div><span class="data-highlight"><span>80</span>%</span><p style="font-size: 0.8rem;">Repurchase Rate</p></div>
+                    <div><span class="data-highlight"><<span>5</span>%</span><p style="font-size: 0.8rem;">Waste</p></div>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa31d4774d.webp" alt="UI 1">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32e8c641.webp" alt="UI 2">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32feceb2.webp" alt="UI 3">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="UI 4">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa559f0512.webp" alt="Back-end Ops">
+            </div>
+        </div>
+
+        <div class="bento-card card-medium">
+            <div class="card-tag">User Empathy & MVP</div>
+            <h3>The Ultimate MVP: Grandma's Veggies</h3>
+            <p>When my grandmother's garden produced more organic (bio) vegetables than we could eat, I decided to sell the fresh surplus at the local rural market. I designed a clear, sincere sign on a cardboard box. It taught me that regardless of the product's form, reducing cognitive load with concise copywriting is the core of any transaction.</p>
+            <div class="img-grid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bc750fb.webp" alt="Sign" class="img-contain">
+                <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bcf1eba.webp" alt="Stall" class="img-contain">
+                <img src="https://via.placeholder.com/300x400/222222/777777?text=Your+Photo+Here" alt="My Photo" class="img-top">
+            </div>
+        </div>
+
+        <div class="bento-card card-medium">
+            <div class="card-tag">Brand Positioning</div>
+            <h3>My First Lesson in DTC (Age 15)</h3>
+            <p>Spotted the early trend of Japanese stationery. By curating high-quality items and unifying the visual merchandising, I created a distinct brand vibe at a local flea market. This direct-to-consumer (DTC) experience successfully validated premium pricing strategies.</p>
+            <div class="img-grid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980687c3.webp" alt="Stationery 1" class="img-top">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa9807e141.webp" alt="Stationery 2" class="img-top">
+            </div>
+        </div>
+
+        <div class="bento-card card-medium">
+            <div class="card-tag">Product Teardown</div>
+            <h3>Rethinking Notion AI Meetings</h3>
+            <p><strong>The Aha Moment:</strong> Seamless multi-language transcription and structural post-meeting summaries.<br><br>
+               <strong>Feature Proposal:</strong> To solve the pain point of unfocused agendas, I propose adding a "Pre-meeting Block" for objective setting and an "In-meeting Tracker" for actionable items, capped with a One-click PDF export.</p>
+        </div>
+
+        <div class="bento-card card-medium">
+            <div class="card-tag">AI Workflow</div>
+            <h3>Reverse-Engineering Growth</h3>
+            <p>I don't just prompt; I build systems. By feeding top-tier web architectures into AI, I extract the underlying logic to self-learn SQL, utilize Vibe Coding to deploy responsive websites, and prototype app logic.</p>
+            <span class="data-highlight" style="font-size: 1.5rem; margin-top: 1.5rem;"><span>//</span> Always learning.</span>
+        </div>
+
+    </main>
+
+    <section class="experience-section">
+        <h2 style="font-size: 2rem; margin-bottom: 3rem;">Professional Path</h2>
+        
+        <div class="exp-item">
+            <div class="exp-date">Mar 2025 - Jun 2025</div>
+            <div class="exp-content
