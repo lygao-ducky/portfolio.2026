@@ -47,15 +47,17 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
         .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
 
-        /* [🔥 修复] 手绘贴纸样式：利用 mix-blend-mode 去除白底，实现透明涂鸦效果 */
+        /* [🔥 彻底修复] 手绘贴纸样式：利用 mix-blend-mode 和 z-index 确保透明且不挡文字 */
         .doodle-sticker { 
-            position: absolute; width: 80px; height: auto; z-index: 5; pointer-events: none; 
+            position: absolute; width: 80px; height: auto; 
+            z-index: 1; /* 降至文本（10）之下 */
+            pointer-events: none; 
             transform: rotate(-5deg);
-            mix-blend-mode: multiply; /* 这个属性会让图片上的白色变透明，只留下黑色线条，完美融入背景！ */
-            opacity: 0.7; /* 稍微降低透明度，更像背景印花 */
+            mix-blend-mode: multiply; /* 过滤白底，线条融入背景 */
+            opacity: 0.7; /* 稍微降低透明度，增强设计格调 */
         }
         /* 在深色模式下，需要反转颜色让线条变白 */
-        body.theme-dark .doodle-sticker { filter: invert(1); mix-blend-mode: screen; opacity: 0.5;}
+        body.theme-dark .doodle-sticker { filter: invert(1); mix-blend-mode: screen; opacity: 0.4;}
 
         /* --- 导航栏 --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; position: relative; z-index: 20; border-bottom: 1px solid var(--card-border); transition: border-color 0.8s ease; }
@@ -76,7 +78,6 @@
         .hero-text p { font-size: 1.15rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2rem; }
         
         .hero-image-wrapper { width: 100%; height: 65vh; border-radius: 16px; overflow: hidden; clip-path: inset(30% 30% 30% 30%); animation: expandImage 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-        /* 更改为人像图片，自带裁切避开右下角水印 */
         .hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transform: scale(1.3); animation: scaleDownImage 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; }
         .hero-name { position: absolute; bottom: -5%; left: -20%; font-size: 8vw; font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: #fff; mix-blend-mode: exclusion; z-index: 10; opacity: 0; animation: fadeUp 1s ease 1.2s forwards; }
 
@@ -88,12 +89,11 @@
         .skill-pill { padding: 0.5rem 1rem; border: 1px solid var(--card-border); border-radius: 8px; font-weight: 500; font-size: 0.9rem; background: var(--card-bg); color: var(--text-main);}
 
         /* ==========================================================================
-           [🔥 更新] 纯文字视差放大过渡区 - 修复尺寸过大看不清的问题
+           [🔥 更新] 纯文字视差放大过渡区 - 文字放大中增加停留时间
            ========================================================================== */
-        .diary-reveal-container { height: 120vh; position: relative; z-index: 15; margin-top: 5vh; }
+        .diary-reveal-container { height: 160vh; /* 撑开更高供停留动效 */ position: relative; z-index: 15; margin-top: 5vh; }
         .diary-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        /* 初始字体变小，防止放大后糊脸 */
-        .diary-bg-text { font-size: clamp(2rem, 4vw, 4rem); font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: var(--text-main); text-align: center; opacity: 0; letter-spacing: 2px; transform: scale(0.6); will-change: transform, opacity; }
+        .diary-bg-text { font-size: clamp(2.5rem, 5vw, 5rem); font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: var(--text-main); text-align: center; opacity: 0; letter-spacing: 2px; transform: scale(0.6); will-change: transform, opacity; }
 
         /* --- 动态时间轴 --- */
         .timeline-section { position: relative; padding-left: 50px; margin-top: 2rem; }
@@ -120,29 +120,41 @@
         @media (min-width: 768px) { .h-scroll-item { flex: 0 0 45%; } }
         .h-scroll-item img { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; }
 
-        /* [🔥 更新] 旗舰案例 O2O 堆叠 - 白色边框改透明玻璃底框 */
+        /* [🔥 更新] O2O经历模块 - 统一滑动效果，变更为自然滚动布局 */
         .pellmell-container { display: flex; gap: 5rem; position: relative; margin-top: 4rem; }
         .pellmell-left { flex: 0 0 35%; position: sticky; top: 15vh; height: max-content; }
-        .pellmell-right-stack { flex: 1; position: relative; padding-bottom: 10vh; }
-        .stack-card { 
-            position: sticky; height: 65vh; 
-            /* 透明玻璃质感替换生硬白底 */
+        
+        /* 变更为瀑布流直滑布局，去掉 sticky 堆叠 */
+        .pellmell-right-scroll { flex: 1; position: relative; display: flex; flex-direction: column; gap: 3rem; }
+        .scroll-card { 
+            border-radius: 20px;
+            /* 保持微弱玻璃质感装饰 */
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px; padding: 15px; 
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.05); 
-            display: flex; flex-direction: column; justify-content: center; margin-bottom: 70vh; transition: transform 0.3s ease; 
+            border: 1px solid var(--card-border);
+            padding: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
         }
-        body.theme-dark .stack-card { background: rgba(30, 29, 28, 0.6); border-color: rgba(255,255,255,0.05); } /* 深色模式适配 */
-
-        .stack-card:nth-child(1) { top: 10vh; z-index: 1; }
-        .stack-card:nth-child(2) { top: 13vh; z-index: 2; }
-        .stack-card:nth-child(3) { top: 16vh; z-index: 3; margin-bottom: 10vh; height: auto;}
-        .stack-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-        .stack-card figcaption { margin-top: 15px; font-size: 1rem; color: var(--text-main); font-weight: 500; }
+        .scroll-card img { width: 100%; height: auto; object-fit: cover; border-radius: 12px; }
+        .scroll-card figcaption { margin-top: 15px; font-size: 1rem; color: var(--text-main); font-weight: 500; text-align: center;}
+        
         .project-logo { width: 80px; height: 80px; object-fit: contain; background: #fff; border-radius: 16px; padding: 5px; margin-bottom: 1.5rem; border: 1px solid var(--card-border); }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .data-grid h4 { font-size: 2.5rem; font-family: 'Space Grotesk', sans-serif; }
+        .data-grid span { font-size: 0.85rem; color: var(--text-muted); }
+        
+        /* [🔥 更新] O2O 文字突出效果 */
+        .data-highlight-text {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #FFFFFF;
+            color: var(--accent);
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(194, 142, 117, 0.2);
+            border: 1px solid rgba(194, 142, 117, 0.1);
+        }
 
         /* 过渡段落：工作照片散落视差 */
         .transition-section { position: relative; height: 150vh; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 4rem 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);}
@@ -150,7 +162,7 @@
         .scatter-img { position: absolute; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); object-fit: cover; z-index: 2; border: 4px solid var(--card-bg); opacity: 0;}
         
         /* ==========================================================================
-           [🔥 全新升级] 统一所有工作经历排版：全宽卡片 + 画廊滑动
+           [🌟 高级排版统一] 统一所有工作经历排版：全宽卡片 + 画廊滑动
            ========================================================================== */
         .experience-container { display: flex; flex-direction: column; gap: 3rem; margin-top: 3rem;}
         
@@ -181,11 +193,13 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
 
-        /* 爱好盲盒 */
+        /* [🔥 更新] 爱好模块排版 - 去掉乱插画，将插画作为背景装饰植入板块 */
+        .hobbies-section { position: relative; overflow: hidden; }
+
         .polaroid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; }
-        .polaroid { background: #fff; padding: 15px 15px 30px 15px; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: rotate(-2deg); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .polaroid { background: #fff; padding: 15px 15px 30px 15px; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: rotate(-2deg); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; z-index: 10; }
         .polaroid:nth-child(even) { transform: rotate(3deg); }
-        .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+        .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 11; }
         .polaroid img { width: 100%; height: 220px; object-fit: cover; margin-bottom: 15px; }
         .polaroid h4 { color: #111; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; text-align: center; }
         .polaroid p { color: #666; font-size: 0.85rem; text-align: center; margin-top: 5px; }
@@ -210,7 +224,7 @@
     <nav>
         <div class="nav-brand">
             <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb08d988a.webp" alt="Audencia Logo">
-            <span>GE Program (PGE)</span>
+            <span>Audencia GE Program (PGE)</span>
         </div>
         <div class="nav-links">
             <a href="https://www.linkedin.com/in/liyi-gao" target="_blank" class="linkedin-btn">LinkedIn</a>
@@ -220,8 +234,6 @@
     <div data-theme="theme-light" class="theme-trigger"></div>
 
     <header class="hero">
-        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566379bac.webp" class="doodle-sticker" style="top: -20px; left: 10%; width: 100px;" alt="Doodle">
-        
         <div class="hero-left reveal">
             <div class="availability-badge">Internship for gap year starting July 2026</div>
             
@@ -292,17 +304,26 @@
                         <div class="node-tag">Phase 2 (2022): Scaling the Ecosystem</div>
                         <h3>Architecting a Campus O2O Network</h3>
                         <p>Transitioned from single-point sales to systemic operations. Founded a digital business with online ordering and offline delivery.</p>
-                        <p style="margin-top: 1rem;"><strong>Community Foundation:</strong> Managed 2 active private-domain WeChat communities (1,000+ members) for daily promotions and rapid user feedback loops.</p>
+                        <p class="data-highlight-text">Managed 2 highly active WeChat private-domain communities (1,000+ members), driving daily promotions and immediate feedback loops.</p>
                         <div class="data-grid">
                             <div><h4>400+</h4><span>Monthly Active Users</span></div>
                             <div><h4>80%</h4><span>Repurchase Rate</span></div>
                             <div><h4><5%</h4><span>Perishable Waste</span></div>
                         </div>
                     </div>
-                    <div class="pellmell-right-stack">
-                        <figure class="stack-card"><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32c18309.webp" alt="Pkg"><figcaption>1. Dedicated dorm-level shelf system.</figcaption></figure>
-                        <figure class="stack-card"><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa54463452.webp" alt="Data"><figcaption>2. Data-driven order collection for precise forecasting.</figcaption></figure>
-                        <figure class="stack-card" style="height: auto;">
+                    
+                    <div class="pellmell-right-scroll">
+                        <figure class="scroll-card">
+                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32c18309.webp" alt="Pkg">
+                            <figcaption>1. dedicated dorm-level shelf system.</figcaption>
+                        </figure>
+                        
+                        <figure class="scroll-card">
+                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa54463452.webp" alt="Data">
+                            <figcaption>2. Data-driven order collection for precise forecasting.</figcaption>
+                        </figure>
+                        
+                        <figure class="scroll-card">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="UI" style="height: 40vh;">
                                 <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa55a4e555.webp" alt="CRM" style="height: 40vh;">
@@ -324,7 +345,7 @@
         <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8059fb3d.webp" class="scatter-img" id="s-img-3" style="width: 280px; height: 350px;">
     </section>
 
-    <section class="section-wrapper" style="padding-top: 0;">
+    <section class="section-wrapper hobbies-section" style="padding-top: 0;">
         <h2 class="heading-font reveal" style="font-size: 2.5rem; text-align: center; margin-bottom: 4rem;">Sharpening the Professional Arsenal</h2>
         
         <div class="experience-container">
@@ -423,18 +444,19 @@
         </div>
     </section>
 
-    <section class="section-wrapper reveal">
+    <section class="section-wrapper reveal hobbies-section">
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad56624cfb9.webp" class="doodle-sticker" style="top: 10%; right: 15%; width: 150px; opacity: 0.2;" alt="Rowing Doodle">
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566421611.webp" class="doodle-sticker" style="bottom: 10%; left: 10%; width: 150px; transform: rotate(10deg); opacity: 0.2;" alt="Hiking Doodle">
+
         <h2 class="heading-font" style="font-size: 2.5rem; text-align: center; margin-bottom: 1rem;">When I'm not in front of my laptop...</h2>
         <p style="text-align: center; color: var(--text-muted); margin-bottom: 3rem;">Maintaining the "hardware" and optimizing the "flow state".</p>
         
         <div class="polaroid-grid">
             <div class="polaroid">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad56624cfb9.webp" class="doodle-sticker" style="top: -20px; left: -10px; width: 60px;" alt="Doodle">
                 <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd6071b398.webp">
                 <h4>Aviron</h4><p>Team synchronization.</p>
             </div>
             <div class="polaroid">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566421611.webp" class="doodle-sticker" style="top: -15px; right: -10px; width: 60px; transform: rotate(15deg);" alt="Doodle">
                 <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace95122ea4.webp" style="object-position: top;">
                 <h4>Randonnée</h4><p>Navigating ambiguity.</p>
             </div>
@@ -461,7 +483,7 @@
         }
         window.addEventListener("scroll", reveal); reveal();
 
-        // 2. Bavet 风格日记纯文字视差放大 (减弱缩放比例)
+        // 2. Bavet 风格日记纯文字视差放大 (修正放大倍数、增加停留、慢淡出)
         const diaryContainer = document.getElementById('diary-container');
         const diaryText = document.getElementById('diary-text');
 
@@ -469,12 +491,23 @@
             if(diaryContainer && diaryText) {
                 const rect = diaryContainer.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
-                let progress = -rect.top / (rect.height - windowHeight);
+                let progress = -rect.top / (rect.height - windowHeight); // 0 到 1
                 
                 if (progress > 0 && progress <= 1) {
-                    let textOpacity = Math.sin(progress * Math.PI); 
-                    // [🔥 修复] 控制最大放大倍数为 1.5，防止糊脸
-                    let textScale = 0.8 + progress * 0.7; 
+                    // [🔥 动效微调核心]
+                    // 1. 放大倍数锁定在约 1.2 倍：利用更柔和的二次方控制
+                    let textScale = 0.8 + Math.pow(progress, 0.4) * 0.4; 
+                    
+                    // 2. 增加停留：透明度在 30%-80% 阶段保持高亮 (不淡出)
+                    let textOpacity = 0;
+                    if(progress < 0.3) {
+                        textOpacity = progress * (1/0.3); // 快速淡入
+                    } else if (progress < 0.8) {
+                        textOpacity = 1; // 停留高亮
+                    } else {
+                        textOpacity = 1 - (progress - 0.8) * (1/0.2); // 慢淡出
+                    }
+                    
                     diaryText.style.opacity = Math.max(textOpacity, 0);
                     diaryText.style.transform = `scale(${textScale})`;
                 } else {
