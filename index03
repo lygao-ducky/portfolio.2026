@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liyi Gao | The Evolution of a Product Thinker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS 变量与动态主题渐变基础 */
+        :root {
+            --bg-color: #FAF9F6; /* 默认浅色 (Phase 1) */
+            --text-main: #1A1A1A;
+            --text-muted: #666666;
+            --card-bg: #FFFFFF;
+            --card-border: rgba(0, 0, 0, 0.08);
+            --accent: #FF5A5F;
+        }
+
+        /* 动态主题类：由 JS 根据滚动位置动态切换 */
+        body.theme-light {
+            --bg-color: #FAF9F6;
+            --text-main: #1A1A1A;
+            --text-muted: #666666;
+            --card-bg: #FFFFFF;
+            --card-border: rgba(0, 0, 0, 0.08);
+            --accent: #E54B4B;
+        }
+        body.theme-brand {
+            --bg-color: #E8F0E4; /* O2O 阶段生机绿 */
+            --text-main: #112A18;
+            --text-muted: #3B5A44;
+            --card-bg: rgba(255,255,255,0.6);
+            --card-border: rgba(17, 42, 24, 0.1);
+            --accent: #276338;
+        }
+        body.theme-dark {
+            --bg-color: #0A0A0A; /* 成熟期与 AI 极客深色 */
+            --text-main: #F0F0F0;
+            --text-muted: #888888;
+            --card-bg: #141414;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent: #DCF836;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            line-height: 1.6; 
+            transition: background-color 0.8s ease, color 0.8s ease; /* 背景色平滑渐变核心 */
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        .section-wrapper { padding: 4rem 5%; max-width: 1400px; margin: 0 auto; }
+
+        /* 元素滑入动效 (Scroll Reveal) */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+
+        /* --- Nav & Hero --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 2rem 5%; border-bottom: 1px solid var(--card-border); transition: border-color 0.8s ease; }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; }
+        .nav-tags span { font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--card-border); padding: 0.4rem 1rem; border-radius: 20px; margin-left: 0.5rem; transition: all 0.8s ease; }
+
+        .hero { display: flex; align-items: center; gap: 4rem; padding: 6rem 5% 4rem; max-width: 1400px; margin: 0 auto; min-height: 80vh;}
+        .hero-text h1 { font-size: 4.5rem; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -2px; }
+        .hero-text p { font-size: 1.25rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2rem; }
+        .hero-image { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; filter: grayscale(100%); transition: filter 0.5s ease, transform 0.5s ease; border: 4px solid var(--card-border); }
+        .hero-image:hover { filter: grayscale(0%); transform: scale(1.05); }
+
+        /* --- 技能矩阵 (The Arsenal) --- */
+        .skills-matrix { margin-bottom: 3rem; }
+        .skills-matrix h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 1rem; }
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;}
+        .skill-pill { padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;}
+        .skill-pill:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px);}
+        .icon-svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* --- Bento Box Grid --- */
+        .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        .bento-card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 2.5rem; transition: all 0.5s ease; display: flex; flex-direction: column; overflow: hidden; backdrop-filter: blur(10px);}
+        .bento-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-color: var(--accent); }
+        .card-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 1rem; font-weight: 600; }
+        .bento-card h3 { font-size: 1.8rem; margin-bottom: 1rem; line-height: 1.2; }
+        
+        .card-large { grid-column: span 4; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+        .card-medium { grid-column: span 2; }
+
+        /* 图片相关样式 */
+        .img-grid { display: flex; gap: 10px; margin-top: 1.5rem; height: 100%;}
+        .img-grid img { width: 100%; height: 200px; border-radius: 12px; object-fit: cover; opacity: 0.9; transition: all 0.4s ease; }
+        .img-grid img:hover { opacity: 1; transform: scale(1.03); }
+        .img-contain { object-fit: contain !important; background: #EAE8E3; }
+        .img-top { object-position: top center; }
+
+        /* 水平滑动图库 (Carousel) */
+        .slider-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-snap-type: x mandatory; margin-top: 1.5rem; }
+        .slider-container::-webkit-scrollbar { height: 6px; }
+        .slider-container::-webkit-scrollbar-track { background: var(--card-border); border-radius: 10px; }
+        .slider-container::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+        .slider-container img { height: 260px; width: auto; object-fit: contain; border-radius: 12px; scroll-snap-align: start; border: 1px solid var(--card-border); background-color: rgba(0,0,0,0.05); }
+
+        /* --- 职业经历：交互悬停模块 --- */
+        .pro-track-title { font-size: 3rem; margin-bottom: 3rem; margin-top: 4rem; text-align: center; }
+        .hover-list { display: flex; flex-direction: column; border-top: 1px solid var(--card-border); }
+        .hover-item { padding: 2.5rem 0; border-bottom: 1px solid var(--card-border); display: grid; grid-template-columns: 1fr 3fr; gap: 2rem; transition: padding 0.3s ease; }
+        .hover-item:hover { padding-left: 1rem; }
+        .hover-logo { width: 70px; height: 70px; object-fit: contain; background: #fff; padding: 5px; border-radius: 12px; margin-bottom: 1rem;}
+        .hover-content h4 { font-size: 1.8rem; margin-bottom: 0.5rem; transition: color 0.3s ease;}
+        .hover-item:hover .hover-content h4 { color: var(--accent); }
+        .hover-content p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1.5rem; }
+        
+        /* --- AI Sandbox 极客终端风 --- */
+        .sandbox-card { background: #050505 !important; border-color: #333 !important; color: #00FF41 !important; font-family: 'Courier New', Courier, monospace; }
+        .sandbox-card h3 { font-family: 'Space Grotesk', sans-serif; color: #FFF; }
+        .sandbox-card p { color: #A0A0A0; font-family: 'Inter', sans-serif; }
+        .cursor-blink { display: inline-block; width: 10px; height: 1.2rem; background: #00FF41; animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 5px;}
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- 爱好：拍立得盲盒 --- */
+        .polaroid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .polaroid { background: #fff; padding: 15px 15px 30px 15px; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: rotate(-2deg); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:hover { transform: scale(1.05) rotate(0deg); box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 10; }
+        .polaroid img { width: 100%; height: 220px; object-fit: cover; margin-bottom: 15px; }
+        .polaroid h4 { color: #111; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; text-align: center; }
+        .polaroid p { color: #666; font-size: 0.85rem; text-align: center; margin-top: 5px; }
+
+        @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } .card-large { grid-column: span 2; grid-template-columns: 1fr; gap: 1.5rem;} }
+        @media (max-width: 768px) { .hero { flex-direction: column-reverse; text-align: left; align-items: flex-start; gap: 2rem; } .bento-grid { grid-template-columns: 1fr; } .card-large, .card-medium { grid-column: span 1; } .hover-item { grid-template-columns: 1fr; gap: 1rem; } .nav-tags { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Liyi GAO.</div>
+        <div class="nav-tags">
+            <span>Audencia PGE '26</span>
+            <span>Available July 2026</span>
+        </div>
+    </nav>
+
+    <div data-theme="theme-light" class="theme-trigger"></div>
+
+    <header class="hero section-wrapper">
+        <div class="hero-text reveal">
+            <h1>The Evolution of a<br><span style="color: var(--accent);">Product Thinker.</span></h1>
+            <p>Merging grassroots ToC intuition with structured FMCG strategies and AI-driven workflows. I build solutions that connect with people and scale with data.</p>
+            
+            <div class="skills-matrix reveal delay-1">
+                <h4>Language & Tech Arsenal</h4>
+                <div class="skill-tags">
+                    <div class="skill-pill">Mandarin (Native)</div>
+                    <div class="skill-pill">French (C1)</div>
+                    <div class="skill-pill">English (C2)</div>
+                    <div class="skill-pill">SQL</div>
+                    <div class="skill-pill">Google Analytics</div>
+                    <div class="skill-pill">Excel / PPT</div>
+                    <div class="skill-pill">Canva</div>
+                </div>
+            </div>
+        </div>
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace08e9de3e.webp" alt="Liyi Gao" class="hero-image reveal delay-2">
+    </header>
+
+    <section class="section-wrapper bento-grid">
+        <div class="bento-card card-medium reveal">
+            <div class="card-tag">Phase 1: Empathy & MVP</div>
+            <h3>The Ultimate MVP: Grandma's Veggies (2018)</h3>
+            <p>When my grandma's garden had a surplus of organic vegetables, I set up a stall at the local market. By designing a sincere, cardboard-box sign highlighting "Grandma's Bio Veggies," I learned that reducing cognitive load with direct copywriting is the core of user conversion.</p>
+            <div class="img-grid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bc750fb.webp" alt="Veggie Stall">
+                <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bcf1eba.webp" alt="Sign" class="img-contain">
+                <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bcedc55.webp" alt="Me holding veggies">
+            </div>
+        </div>
+
+        <div class="bento-card card-medium reveal delay-1">
+            <div class="card-tag">Phase 1: Brand Positioning</div>
+            <h3>My First Lesson in DTC (2015)</h3>
+            <p>Spotted the early trend of Japanese stationery. By curating high-quality items and unifying the visual display, I created a distinct brand vibe at a local flea market, standing out from the clutter and successfully validating premium pricing.</p>
+            <div class="img-grid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980687c3.webp" alt="Stationery" class="img-top">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980a05c1.webp" alt="Sign">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa9807e141.webp" alt="Curating">
+            </div>
+        </div>
+    </section>
+
+    <div data-theme="theme-brand" class="theme-trigger"></div>
+
+    <section class="section-wrapper bento-grid" style="padding-top: 2rem;">
+        <div class="bento-card card-large reveal">
+            <div>
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa31d4774d.webp" alt="O2O Logo" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 1rem; border-radius: 16px; background: #fff; padding: 5px;">
+                <div class="card-tag">Phase 2: Scaling the Ecosystem</div>
+                <h3>Architecting a Campus O2O Network</h3>
+                <p>Founded a digital business featuring online ordering and offline delivery. Transitioned from single-point sales to systemic operations: designed the frontend UI, executed private-traffic growth (WeChat groups), and built backend demand forecasting to keep perishable waste under 5%.</p>
+                <div style="display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                    <div><span style="font-size: 2.2rem; font-weight: 700;">400+</span><p style="font-size: 0.85rem; color: var(--text-muted);">Monthly Active Users</p></div>
+                    <div><span style="font-size: 2.2rem; font-weight: 700;">80%</span><p style="font-size: 0.85rem; color: var(--text-muted);">Repurchase Rate</p></div>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="Online Store UI">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32e8c641.webp" alt="Poster">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32c18309.webp" alt="Packaging">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa54463452.webp" alt="Backend Data">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa55a4e555.webp" alt="WeChat CRM">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa559f0512.webp" alt="Fruit Poster">
+            </div>
+        </div>
+    </section>
+
+    <div data-theme="theme-dark" class="theme-trigger"></div>
+
+    <section class="section-wrapper" style="padding-top: 2rem;">
+        <h2 class="pro-track-title reveal">Sharpening the Professional Arsenal</h2>
+        <div class="hover-list">
+            
+            <div class="hover-item reveal">
+                <div>
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb263e823.webp" alt="Wealth Logo" class="hover-logo">
+                    <span class="card-tag" style="display: block;">FMCG | 360° Brand Partnerships</span>
+                </div>
+                <div class="hover-content">
+                    <h4>Wealthfields Lohmann</h4>
+                    <p>Elevated marketing ROI from 0.2 to 1.0+ by screening top-tier MCNs/KOLs based on audience-content matching. Orchestrated complex Go-to-Market activations, seamlessly linking offline marathon sponsorships with live-streaming events (50k+ concurrent viewers).</p>
+                    <div class="slider-container" style="margin-top: 1rem;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3c7db80.webp" alt="Marathon Live">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac2f76d0b.webp" alt="50k Stream">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3780c84.webp" alt="Setup">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac4516619.webp" alt="Offline Sales">
+                    </div>
+                </div>
+            </div>
+
+            <div class="hover-item reveal">
+                <div>
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a0adf8.webp" alt="UNA Logo" class="hover-logo">
+                    <span class="card-tag" style="display: block;">E-com | Supply Chain Logic</span>
+                </div>
+                <div class="hover-content">
+                    <h4>UNA Brands (Singapore Unicorn)</h4>
+                    <p>Mastered upstream supply chain logic. Sourced, evaluated, and negotiated with international suppliers to optimize costs and accelerate the product development lifecycle for Amazon SKUs.</p>
+                    <div class="img-grid" style="height: 180px; width: 280px; margin-top: 1rem;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc460e1939.webp" alt="Team">
+                    </div>
+                </div>
+            </div>
+
+            <div class="hover-item reveal">
+                <div>
+                    <div class="hover-logo" style="display: flex; align-items: center; justify-content: center; font-weight: 700; color: #333;">学而思</div>
+                    <span class="card-tag" style="display: block;">EdTech | Audience Engagement</span>
+                </div>
+                <div class="hover-content">
+                    <h4>Xueersi (TAL Education)</h4>
+                    <p>Honed extreme audience empathy and public speaking skills. Conducted high-frequency Math Olympiad lectures, deeply engaging both children and parents to build lasting customer trust.</p>
+                    <div class="slider-container" style="margin-top: 1rem; height: 160px;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8ad0d1f7.webp" alt="Award">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8059fb3d.webp" alt="Class">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc80649ccc.webp" alt="Kids">
+                    </div>
+                </div>
+            </div>
+
+            <div class="hover-item reveal">
+                <div>
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a08a8f.webp" alt="ACE Logo" class="hover-logo">
+                    <span class="card-tag" style="display: block;">Leadership | Event Planning</span>
+                </div>
+                <div class="hover-content">
+                    <h4>Audencia Entrepreneur Club (ACE)</h4>
+                    <p>Currently co-organizing the "DARE" entrepreneurship event. Securing sponsorships, inviting guest speakers, and driving cross-departmental coordination to deliver impactful campus events.</p>
+                    <div class="slider-container" style="margin-top: 1rem;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7b9d6766.webp" alt="Dare 1">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7ba00aba.webp" alt="Dare 2">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7ba160dd.webp" alt="Dare 3">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal">
+        <div class="bento-card sandbox-card">
+            <div class="card-tag" style="color: #00FF41;">> ./The_AI_Sandbox.sh</div>
+            <h3>Learning to Build <span class="cursor-blink"></span></h3>
+            <p style="margin-top: 1rem;">I'm currently exploring the frontier of <strong>Vibe Coding</strong> and AI-assisted development. While I'm still learning the technical ropes of website structuring, I treat AI as a powerful strategic co-pilot. </p>
+            <p style="margin-top: 1rem;">By translating my business intuitions into structured prompts, I'm practicing how to rapidly prototype solutions and validate ideas. It's a journey of continuous trial and error, but my ultimate goal is to leverage these tools to exponentially increase marketing efficiency and pioneer dynamic digital experiences.</p>
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal">
+        <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 1rem;">When I'm not in front of my laptop...</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Maintaining the "hardware" and optimizing the "flow state".</p>
+        
+        <div class="polaroid-grid">
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd6071b398.webp" alt="Aviron">
+                <h4>Aviron / The Sync Engine</h4>
+                <p>Perfecting team alignment. Like cross-functional projects, every stroke requires precise execution and absolute synchronization to move forward.</p>
+            </div>
+            
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd627aac3b.webp" alt="Randonnee" class="img-top">
+                <h4>Randonnée / Navigating Ambiguity</h4>
+                <p>Tackling long-term strategies. Mountain trails teach patience, endurance, and extreme focus when facing unpredictable terrain.</p>
+            </div>
+            
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd61bb0b34.webp" alt="Swimming">
+                <h4>Swimming / The Flow State</h4>
+                <p>System reboot. Tuning out external noise to focus on the iteration of rhythm and breathing under pressure.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem 0; border-top: 1px solid var(--card-border); margin-top: 4rem; color: var(--text-muted); font-size: 0.9rem;">
+        <p>Crafted with AI assistance & human intuition. © 2026 Liyi GAO.</p>
+    </footer>
+
+    <script>
+        // 1. 元素滚动滑入动效 (Scroll Reveal)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); // 初始化触发一次
+
+        // 2. 滚动背景颜色渐变监听 (Intersection Observer)
+        const themeTriggers = document.querySelectorAll('.theme-trigger');
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50% 0px -50% 0px', // 当触发器滚动到屏幕中间时切换
+            threshold: 0
+        };
+        
+        const themeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const theme = entry.target.getAttribute('data-theme');
+                    document.body.className = theme;
+                }
+            });
+        }, observerOptions);
+
+        themeTriggers.forEach(trigger => {
+            themeObserver.observe(trigger);
+        });
+    </script>
+</body>
+</html>
