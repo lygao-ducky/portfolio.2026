@@ -47,8 +47,15 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
         .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
 
-        /* 手绘贴纸样式 */
-        .doodle-sticker { position: absolute; width: 80px; height: auto; z-index: 5; pointer-events: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); transform: rotate(-5deg); }
+        /* [🔥 修复] 手绘贴纸样式：利用 mix-blend-mode 去除白底，实现透明涂鸦效果 */
+        .doodle-sticker { 
+            position: absolute; width: 80px; height: auto; z-index: 5; pointer-events: none; 
+            transform: rotate(-5deg);
+            mix-blend-mode: multiply; /* 这个属性会让图片上的白色变透明，只留下黑色线条，完美融入背景！ */
+            opacity: 0.7; /* 稍微降低透明度，更像背景印花 */
+        }
+        /* 在深色模式下，需要反转颜色让线条变白 */
+        body.theme-dark .doodle-sticker { filter: invert(1); mix-blend-mode: screen; opacity: 0.5;}
 
         /* --- 导航栏 --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; position: relative; z-index: 20; border-bottom: 1px solid var(--card-border); transition: border-color 0.8s ease; }
@@ -58,7 +65,7 @@
         .linkedin-btn { background: var(--text-main); color: var(--bg-color); padding: 0.6rem 1.5rem; border-radius: 30px; font-weight: 500; text-decoration: none; font-size: 0.9rem; transition: transform 0.3s ease; }
         .linkedin-btn:hover { transform: translateY(-2px); }
 
-        /* --- 首屏动效 (包含实习宣告) --- */
+        /* --- 首屏动效 --- */
         .hero { display: flex; align-items: center; justify-content: space-between; padding: 4rem 5%; max-width: 1400px; margin: 0 auto; min-height: 80vh; position: relative; z-index: 10; }
         .hero-left { flex: 0 0 50%; position: relative; }
         .hero-right { flex: 0 0 45%; position: relative; }
@@ -66,10 +73,11 @@
         .availability-badge { display: inline-block; padding: 0.4rem 1.2rem; border: 1px solid var(--accent); border-radius: 30px; color: var(--accent); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; background: rgba(194, 142, 117, 0.1); }
         
         .hero-text h1 { font-size: clamp(3rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -2px; }
-        .hero-text p { font-size: 1.2rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2rem; }
+        .hero-text p { font-size: 1.15rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2rem; }
         
         .hero-image-wrapper { width: 100%; height: 65vh; border-radius: 16px; overflow: hidden; clip-path: inset(30% 30% 30% 30%); animation: expandImage 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-        .hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.3); animation: scaleDownImage 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; }
+        /* 更改为人像图片，自带裁切避开右下角水印 */
+        .hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transform: scale(1.3); animation: scaleDownImage 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; }
         .hero-name { position: absolute; bottom: -5%; left: -20%; font-size: 8vw; font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: #fff; mix-blend-mode: exclusion; z-index: 10; opacity: 0; animation: fadeUp 1s ease 1.2s forwards; }
 
         @keyframes expandImage { to { clip-path: inset(0 0 0 0); } }
@@ -80,18 +88,19 @@
         .skill-pill { padding: 0.5rem 1rem; border: 1px solid var(--card-border); border-radius: 8px; font-weight: 500; font-size: 0.9rem; background: var(--card-bg); color: var(--text-main);}
 
         /* ==========================================================================
-           [🔥 更新] 纯文字视差放大过渡区 (Bavet Style)
+           [🔥 更新] 纯文字视差放大过渡区 - 修复尺寸过大看不清的问题
            ========================================================================== */
-        .diary-reveal-container { height: 150vh; position: relative; z-index: 15; margin-top: 5vh; }
+        .diary-reveal-container { height: 120vh; position: relative; z-index: 15; margin-top: 5vh; }
         .diary-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .diary-bg-text { font-size: clamp(3rem, 6vw, 6rem); font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: var(--text-main); text-align: center; opacity: 0; letter-spacing: -2px; transform: scale(0.8); will-change: transform, opacity; }
+        /* 初始字体变小，防止放大后糊脸 */
+        .diary-bg-text { font-size: clamp(2rem, 4vw, 4rem); font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: var(--text-main); text-align: center; opacity: 0; letter-spacing: 2px; transform: scale(0.6); will-change: transform, opacity; }
 
-        /* --- 动态时间轴 (更正图标) --- */
+        /* --- 动态时间轴 --- */
         .timeline-section { position: relative; padding-left: 50px; margin-top: 2rem; }
         .timeline-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--timeline-bg); transition: background 0.8s ease; }
         .timeline-dot { 
             position: absolute; left: -4px; top: 0; width: 40px; height: 40px; border-radius: 50%; 
-            background-image: url('https://picui.ogmua.cn/s1/2026/03/08/69ad566d762ca.webp'); /* 更正为新图标 */
+            background-image: url('https://picui.ogmua.cn/s1/2026/03/08/69ad566d762ca.webp'); 
             background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #fff; 
             z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: top 0.1s ease-out; 
         }
@@ -111,11 +120,23 @@
         @media (min-width: 768px) { .h-scroll-item { flex: 0 0 45%; } }
         .h-scroll-item img { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; }
 
-        /* 旗舰案例 O2O 堆叠 */
+        /* [🔥 更新] 旗舰案例 O2O 堆叠 - 白色边框改透明玻璃底框 */
         .pellmell-container { display: flex; gap: 5rem; position: relative; margin-top: 4rem; }
         .pellmell-left { flex: 0 0 35%; position: sticky; top: 15vh; height: max-content; }
         .pellmell-right-stack { flex: 1; position: relative; padding-bottom: 10vh; }
-        .stack-card { position: sticky; height: 65vh; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 15px; box-shadow: 0 -15px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; margin-bottom: 70vh; transition: transform 0.3s ease; }
+        .stack-card { 
+            position: sticky; height: 65vh; 
+            /* 透明玻璃质感替换生硬白底 */
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px; padding: 15px; 
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.05); 
+            display: flex; flex-direction: column; justify-content: center; margin-bottom: 70vh; transition: transform 0.3s ease; 
+        }
+        body.theme-dark .stack-card { background: rgba(30, 29, 28, 0.6); border-color: rgba(255,255,255,0.05); } /* 深色模式适配 */
+
         .stack-card:nth-child(1) { top: 10vh; z-index: 1; }
         .stack-card:nth-child(2) { top: 13vh; z-index: 2; }
         .stack-card:nth-child(3) { top: 16vh; z-index: 3; margin-bottom: 10vh; height: auto;}
@@ -123,33 +144,35 @@
         .stack-card figcaption { margin-top: 15px; font-size: 1rem; color: var(--text-main); font-weight: 500; }
         .project-logo { width: 80px; height: 80px; object-fit: contain; background: #fff; border-radius: 16px; padding: 5px; margin-bottom: 1.5rem; border: 1px solid var(--card-border); }
 
-        /* ==========================================================================
-           [🔥 新增] 过渡段落：工作照片散落视差 (Bavet Transition Style)
-           ========================================================================== */
+        /* 过渡段落：工作照片散落视差 */
         .transition-section { position: relative; height: 150vh; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 4rem 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);}
         .transition-bg-words { position: absolute; text-align: center; color: var(--text-muted); font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 4rem); font-weight: 700; opacity: 0.1; line-height: 1.2; letter-spacing: 2px; text-transform: uppercase; z-index: 1;}
         .scatter-img { position: absolute; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); object-fit: cover; z-index: 2; border: 4px solid var(--card-bg); opacity: 0;}
         
-        /* --- 职业硬实力 --- */
-        .pro-list { margin-top: 3rem; }
-        .pro-item { padding: 3rem 0; border-bottom: 1px solid var(--card-border); display: grid; grid-template-columns: 120px 1fr; gap: 2rem; position: relative;}
-        .pro-logo { width: 80px; height: 80px; object-fit: contain; background: #fff; padding: 5px; border-radius: 16px; }
-        .pro-meta { font-family: 'Space Grotesk', sans-serif; color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem; }
-        .pro-bullets { padding-left: 1.2rem; color: var(--text-muted); }
-        .pro-bullets li { margin-bottom: 0.5rem; }
+        /* ==========================================================================
+           [🔥 全新升级] 统一所有工作经历排版：全宽卡片 + 画廊滑动
+           ========================================================================== */
+        .experience-container { display: flex; flex-direction: column; gap: 3rem; margin-top: 3rem;}
+        
+        .pro-card { background: var(--card-bg); padding: 3rem; border-radius: 24px; border: 1px solid var(--card-border); box-shadow: 0 15px 40px rgba(0,0,0,0.03); transition: transform 0.3s ease;}
+        .pro-card:hover { transform: translateY(-5px); border-color: var(--accent);}
+        
+        .pro-header { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .pro-logo { width: 70px; height: 70px; object-fit: contain; background: #fff; padding: 5px; border-radius: 16px; border: 1px solid var(--card-border); flex-shrink: 0;}
+        .pro-meta { font-family: 'Space Grotesk', sans-serif; color: var(--accent); font-size: 0.95rem; margin-bottom: 0.3rem; letter-spacing: 1px; text-transform: uppercase;}
+        .pro-header h4 { font-size: 2rem; line-height: 1.2;}
+        .pro-focus { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 500;}
+        
+        .pro-bullets { padding-left: 1.2rem; color: var(--text-muted); font-size: 1.05rem;}
+        .pro-bullets li { margin-bottom: 0.8rem; }
 
-        /* [🔥 更新] Wealthfields 专属画廊样式 */
-        .wealthfields-highlight { background: var(--card-bg); padding: 3rem; border-radius: 24px; border: 1px solid var(--card-border); margin-bottom: 3rem; box-shadow: 0 15px 40px rgba(0,0,0,0.05);}
+        /* 画廊滑动容器统一 */
         .gallery-container { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; margin-top: 2rem; }
-        .gallery-container::-webkit-scrollbar { height: 8px; }
+        .gallery-container::-webkit-scrollbar { height: 6px; }
         .gallery-container::-webkit-scrollbar-track { background: var(--card-border); border-radius: 10px; }
         .gallery-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
         .gallery-container figure { flex: 0 0 auto; scroll-snap-align: center; }
-        .gallery-container img { height: 350px; width: auto; object-fit: cover; border-radius: 16px; }
-
-        .slider-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-snap-type: x mandatory; margin-top: 1.5rem; }
-        .slider-container::-webkit-scrollbar { display: none; }
-        .slider-container img { width: auto; object-fit: cover; border-radius: 12px; scroll-snap-align: start; border: 1px solid var(--card-border); }
+        .gallery-container img { height: 280px; width: auto; object-fit: cover; border-radius: 12px; border: 1px solid var(--card-border);}
 
         /* AI 毛玻璃卡片 */
         .sandbox-card { 
@@ -164,6 +187,8 @@
         .polaroid:nth-child(even) { transform: rotate(3deg); }
         .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
         .polaroid img { width: 100%; height: 220px; object-fit: cover; margin-bottom: 15px; }
+        .polaroid h4 { color: #111; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; text-align: center; }
+        .polaroid p { color: #666; font-size: 0.85rem; text-align: center; margin-top: 5px; }
 
         @media (max-width: 900px) {
             .hero { flex-direction: column-reverse; gap: 2rem; }
@@ -172,10 +197,11 @@
             .pellmell-container { flex-direction: column; gap: 2rem; }
             .pellmell-left { position: relative; top: 0; }
             .stack-card { height: auto; margin-bottom: 5vh; position: relative; top: 0 !important; box-shadow: 0 10px 20px rgba(0,0,0,0.1);}
-            .pro-item { grid-template-columns: 1fr; gap: 1rem; }
             .grid-3col { grid-template-columns: 1fr; }
-            .gallery-container img { height: 250px; }
-            .nav-brand span { display: none; } /* 移动端隐藏过长文字，只保留 Logo */
+            .gallery-container img { height: 220px; }
+            .nav-brand span { display: none; }
+            .pro-card { padding: 2rem 1.5rem; }
+            .pro-header { flex-direction: column; gap: 1rem; }
         }
     </style>
 </head>
@@ -194,14 +220,14 @@
     <div data-theme="theme-light" class="theme-trigger"></div>
 
     <header class="hero">
-        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566379bac.webp" class="doodle-sticker" style="top: -20px; left: 10%; width: 100px; opacity: 0.8;" alt="Doodle">
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566379bac.webp" class="doodle-sticker" style="top: -20px; left: 10%; width: 100px;" alt="Doodle">
         
         <div class="hero-left reveal">
             <div class="availability-badge">Internship for gap year starting July 2026</div>
             
             <div class="hero-text">
                 <h1>The Evolution of a<br><span style="color: var(--accent);">Product Thinker.</span></h1>
-                <p>Merging grassroots ToC intuition with structured FMCG strategies and AI-driven workflows. I build solutions that connect with people and scale with data.</p>
+                <p>Dedicated to discovering and operating products that solve real human pain points. I aspire to build brands with depth and style, bridging the gap between business strategy and human empathy.</p>
             </div>
             <div class="skill-tags reveal delay-1">
                 <div class="skill-pill">🇨🇳 Mandarin</div>
@@ -213,7 +239,7 @@
         </div>
         <div class="hero-right">
             <div class="hero-image-wrapper">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace08e9de3e.webp" alt="Liyi Gao">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad689ba1d37.webp" alt="Liyi Gao">
             </div>
             <div class="hero-name">Liyi GAO</div>
         </div>
@@ -301,68 +327,88 @@
     <section class="section-wrapper" style="padding-top: 0;">
         <h2 class="heading-font reveal" style="font-size: 2.5rem; text-align: center; margin-bottom: 4rem;">Sharpening the Professional Arsenal</h2>
         
-        <div class="wealthfields-highlight reveal">
-            <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb263e823.webp" alt="WL Logo" class="pro-logo" style="margin:0;">
-                <div>
-                    <div class="pro-meta">Canton, China | Mar 2025 - Jun 2025</div>
-                    <h4 style="font-size: 2rem;">Wealthfields Lohmann (FMCG)</h4>
-                </div>
-            </div>
-            <p style="font-size: 1.1rem; margin-bottom: 1rem;">Focus: 360° Brand Partnerships & Go-to-Market</p>
-            <ul class="pro-bullets" style="font-size: 1.05rem;">
-                <li>Orchestrated activations linking marathon sponsorships with live-streaming (50k+ viewers).</li>
-                <li>Elevated ROI from 0.2 to 1.0+ via rigorous audience-content matching.</li>
-            </ul>
+        <div class="experience-container">
             
-            <div class="gallery-container">
-                <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3c7db80.webp"><figcaption>Marathon Live</figcaption></figure>
-                <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac2f76d0b.webp"><figcaption>50k+ Stream</figcaption></figure>
-                <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3780c84.webp"><figcaption>Setup</figcaption></figure>
-                <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac4516619.webp"><figcaption>Offline Sales</figcaption></figure>
-            </div>
-        </div>
-
-        <div class="pro-list">
-            <div class="pro-item reveal">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a0adf8.webp" alt="MMA Logo" class="pro-logo">
-                <div>
-                    <div class="pro-meta">Canton, China | Jan 2023 - Aug 2023</div>
-                    <h4>MMA Brand Services Pte. Ltd. (Singapore Unicorn)</h4>
-                    <p>Focus: E-com Supply Chain & Sourcing</p>
-                    <ul class="pro-bullets">
-                        <li>Accelerated Amazon SKU Product Development via robust B2B sourcing.</li>
-                        <li>Reduced logistics costs by 20-40% through international supplier negotiations.</li>
-                    </ul>
+            <div class="pro-card reveal">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb263e823.webp" alt="WL Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Canton, China | Mar 2025 - Jun 2025</div>
+                        <h4>Wealthfields Lohmann (FMCG)</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: 360° Brand Partnerships & Go-to-Market</p>
+                <ul class="pro-bullets">
+                    <li>Orchestrated activations linking marathon sponsorships with live-streaming (50k+ viewers).</li>
+                    <li>Elevated ROI from 0.2 to 1.0+ via rigorous audience-content matching.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3c7db80.webp"><figcaption>Marathon Live</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac2f76d0b.webp"><figcaption>50k+ Stream</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3780c84.webp"><figcaption>Setup</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac4516619.webp"><figcaption>Offline Sales</figcaption></figure>
                 </div>
             </div>
 
-            <div class="pro-item reveal">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace46132100.webp" alt="TAL Logo" class="pro-logo">
-                <div>
-                    <div class="pro-meta">Guangzhou, China | Nov 2023 - Jun 2024</div>
-                    <h4>TAL Education Group</h4>
-                    <p>Focus: EdTech & Audience Engagement</p>
-                    <ul class="pro-bullets">
-                        <li>Achieved #1 performance in high-pressure instructor live presentations.</li>
-                        <li>Deconstructed complex Math logic into engaging content.</li>
-                        <li>Secured 100% renewal rate through proactive relationship management.</li>
-                    </ul>
+            <div class="pro-card reveal delay-1">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a0adf8.webp" alt="MMA Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Canton, China | Jan 2023 - Aug 2023</div>
+                        <h4>MMA Brand Services Pte. Ltd.</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: E-com Supply Chain & Sourcing</p>
+                <ul class="pro-bullets">
+                    <li>Accelerated Amazon SKU Product Development via robust B2B sourcing.</li>
+                    <li>Reduced logistics costs by 20-40% through international supplier negotiations.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc460e1939.webp"><figcaption>Supply Chain Team</figcaption></figure>
                 </div>
             </div>
 
-            <div class="pro-item reveal">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a08a8f.webp" alt="ACE Logo" class="pro-logo">
-                <div>
-                    <div class="pro-meta">Nantes, France | Ongoing</div>
-                    <h4>Audencia Entrepreneur Club (ACE)</h4>
-                    <p>Focus: Leadership & Event Planning</p>
-                    <ul class="pro-bullets">
-                        <li>Organizing the "DARE" initiative, securing sponsorships and industry guest speakers.</li>
-                        <li>Coordinating cross-departmental efforts and designing high-impact visual materials.</li>
-                    </ul>
+            <div class="pro-card reveal">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace46132100.webp" alt="TAL Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Guangzhou, China | Nov 2023 - Jun 2024</div>
+                        <h4>TAL Education Group</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: EdTech & Audience Engagement</p>
+                <ul class="pro-bullets">
+                    <li>Achieved #1 performance in high-pressure instructor live presentations.</li>
+                    <li>Deconstructed complex Math logic into engaging content.</li>
+                    <li>Secured 100% renewal rate through proactive relationship management.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8ad0d1f7.webp"><figcaption>Top Performance</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8059fb3d.webp"><figcaption>Live Presentation</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc80649ccc.webp"><figcaption>Engagement</figcaption></figure>
                 </div>
             </div>
+
+            <div class="pro-card reveal delay-1">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a08a8f.webp" alt="ACE Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Nantes, France | Ongoing</div>
+                        <h4>Audencia Entrepreneur Club (ACE)</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: Leadership & Event Planning</p>
+                <ul class="pro-bullets">
+                    <li>Organizing the "DARE" initiative, securing sponsorships and industry guest speakers.</li>
+                    <li>Coordinating cross-departmental efforts and designing high-impact visual materials.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7b9d6766.webp"><figcaption>Event Planning</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7ba00aba.webp"><figcaption>Coordination</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7ba160dd.webp"><figcaption>DARE Execution</figcaption></figure>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -415,7 +461,7 @@
         }
         window.addEventListener("scroll", reveal); reveal();
 
-        // 2. Bavet 风格日记纯文字视差放大
+        // 2. Bavet 风格日记纯文字视差放大 (减弱缩放比例)
         const diaryContainer = document.getElementById('diary-container');
         const diaryText = document.getElementById('diary-text');
 
@@ -426,8 +472,9 @@
                 let progress = -rect.top / (rect.height - windowHeight);
                 
                 if (progress > 0 && progress <= 1) {
-                    let textOpacity = Math.sin(progress * Math.PI); // 抛物线控制：中间最亮，两头变暗
-                    let textScale = 0.8 + progress * 2.5; // 文字不断放大
+                    let textOpacity = Math.sin(progress * Math.PI); 
+                    // [🔥 修复] 控制最大放大倍数为 1.5，防止糊脸
+                    let textScale = 0.8 + progress * 0.7; 
                     diaryText.style.opacity = Math.max(textOpacity, 0);
                     diaryText.style.transform = `scale(${textScale})`;
                 } else {
@@ -446,20 +493,17 @@
             if(transContainer) {
                 const rect = transContainer.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
-                let progress = 1 - (rect.bottom / (windowHeight + rect.height)); // 0 到 1
+                let progress = 1 - (rect.bottom / (windowHeight + rect.height)); 
                 
                 if(progress > 0 && progress < 1) {
-                    let opacity = Math.sin(progress * Math.PI); // 淡入淡出
+                    let opacity = Math.sin(progress * Math.PI); 
                     
-                    // 图片 1 从左下向右上飞
                     img1.style.opacity = opacity;
                     img1.style.transform = `translate(${-100 + progress * 80}%, ${100 - progress * 150}%) rotate(${-15 + progress * 5}deg)`;
                     
-                    // 图片 2 从上方往下压
                     img2.style.opacity = opacity;
                     img2.style.transform = `translate(${10 - progress * 20}%, ${-100 + progress * 100}%) rotate(${5 - progress * 10}deg)`;
                     
-                    // 图片 3 从右侧切入
                     img3.style.opacity = opacity;
                     img3.style.transform = `translate(${100 - progress * 70}%, ${20 - progress * 50}%) rotate(${15 - progress * 15}deg)`;
                 }
