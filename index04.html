@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liyi Gao | The Evolution of a Product Thinker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 动态主题 CSS 变量 */
+        :root {
+            --bg-color: #FAF9F6;
+            --text-main: #1A1A1A;
+            --text-muted: #666666;
+            --card-border: rgba(0, 0, 0, 0.1);
+            --accent: #FF5A5F;
+            --timeline-bg: rgba(0, 0, 0, 0.1);
+        }
+
+        body.theme-light {
+            --bg-color: #FAF9F6; --text-main: #1A1A1A; --text-muted: #666666; --card-border: rgba(0, 0, 0, 0.1); --accent: #FF5A5F; --timeline-bg: rgba(0, 0, 0, 0.1);
+        }
+        body.theme-brand {
+            --bg-color: #EBF0EA; --text-main: #112A18; --text-muted: #3B5A44; --card-border: rgba(17, 42, 24, 0.15); --accent: #276338; --timeline-bg: rgba(17, 42, 24, 0.15);
+        }
+        body.theme-dark {
+            --bg-color: #0A0A0A; --text-main: #F0F0F0; --text-muted: #888888; --card-border: rgba(255, 255, 255, 0.1); --accent: #DCF836; --timeline-bg: rgba(255, 255, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; 
+            transition: background-color 0.8s ease, color 0.8s ease;
+        }
+        
+        /* 防止横向滚动，但不使用 hidden 防止 sticky 失效 */
+        html { overflow-x: clip; scroll-behavior: smooth; }
+
+        h1, h2, h3, .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        .section-wrapper { padding: 4rem 5%; max-width: 1300px; margin: 0 auto; }
+
+        /* 元素滑入动效 */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
+
+        /* --- 导航与首屏 --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 2rem 5%; border-bottom: 1px solid var(--card-border); transition: border-color 0.8s ease; }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; }
+        .nav-links { display: flex; gap: 1rem; align-items: center; }
+        .linkedin-btn { background: var(--text-main); color: var(--bg-color); padding: 0.5rem 1.2rem; border-radius: 20px; font-weight: 500; text-decoration: none; font-size: 0.9rem; transition: transform 0.3s ease; }
+        .linkedin-btn:hover { transform: translateY(-2px); }
+
+        .hero { display: flex; align-items: center; gap: 4rem; padding: 6rem 5% 4rem; max-width: 1300px; margin: 0 auto; min-height: 75vh; }
+        .hero-text h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -2px; }
+        .hero-text p { font-size: 1.2rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2rem; }
+        .hero-image { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; filter: grayscale(100%); transition: filter 0.5s ease; border: 4px solid var(--card-border); }
+        .hero-image:hover { filter: grayscale(0%); }
+
+        /* 技能矩阵 */
+        .skills-matrix h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 1rem; }
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .skill-pill { padding: 0.5rem 1rem; border: 1px solid var(--card-border); border-radius: 8px; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        /* --- 动态时间轴 (Jasmina Denner Style) --- */
+        .timeline-section { position: relative; padding-left: 50px; margin-top: 4rem; }
+        .timeline-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--timeline-bg); transition: background 0.8s ease; }
+        .timeline-dot { position: absolute; left: 8px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); z-index: 2; transition: background 0.8s ease; box-shadow: 0 0 10px var(--accent); }
+
+        .timeline-node { margin-bottom: 5rem; position: relative; }
+        .node-tag { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; font-weight: 600; }
+        .timeline-node h3 { font-size: 2rem; margin-bottom: 1rem; }
+        .timeline-node p { font-size: 1.05rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; }
+
+        /* 图片注释样式 */
+        figure { margin: 0; }
+        figcaption { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); font-style: italic; border-left: 2px solid var(--accent); padding-left: 10px; }
+
+        /* 节点 1：图片并排 */
+        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .grid-2col img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; }
+
+        /* 节点 2：原生横向滑动图库 (隐藏滚动条) */
+        .h-scroll-container { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; }
+        .h-scroll-container::-webkit-scrollbar { display: none; }
+        .h-scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
+        .h-scroll-item { flex: 0 0 70%; scroll-snap-align: start; }
+        @media (min-width: 768px) { .h-scroll-item { flex: 0 0 45%; } }
+        .h-scroll-item img { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; }
+
+        /* --- 旗舰案例：Pellmell 瀑布流交互 --- */
+        .pellmell-container { display: flex; gap: 5rem; position: relative; margin-top: 4rem; }
+        .pellmell-left { flex: 0 0 35%; position: sticky; top: 15vh; height: max-content; }
+        .pellmell-right { flex: 1; display: flex; flex-direction: column; gap: 4rem; margin-top: 5rem; }
+        
+        .project-logo { width: 80px; height: 80px; object-fit: contain; background: #fff; border-radius: 16px; padding: 5px; margin-bottom: 1.5rem; border: 1px solid var(--card-border); }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .data-grid h4 { font-size: 2.5rem; font-family: 'Space Grotesk', sans-serif; }
+        .data-grid span { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .pellmell-img-wrapper img { width: 100%; border-radius: 16px; border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        /* --- 职业硬实力列表 --- */
+        .pro-list { margin-top: 3rem; border-top: 1px solid var(--card-border); }
+        .pro-item { padding: 3rem 0; border-bottom: 1px solid var(--card-border); display: grid; grid-template-columns: 120px 1fr; gap: 2rem; }
+        .pro-logo { width: 80px; height: 80px; object-fit: contain; background: #fff; padding: 5px; border-radius: 16px; }
+        .pro-meta { font-family: 'Space Grotesk', sans-serif; color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .pro-item h4 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .pro-item p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1rem; }
+        .pro-bullets { padding-left: 1.2rem; color: var(--text-muted); }
+        .pro-bullets li { margin-bottom: 0.5rem; }
+
+        /* --- AI 探索实验室 --- */
+        .sandbox-card { background: #050505; border: 1px solid #333; color: #00FF41; font-family: 'Courier New', Courier, monospace; padding: 3rem; border-radius: 24px; margin-top: 2rem;}
+        .sandbox-card h3 { font-family: 'Space Grotesk', sans-serif; color: #FFF; font-size: 2rem; margin-bottom: 1.5rem;}
+        .sandbox-card p { color: #A0A0A0; font-family: 'Inter', sans-serif; font-size: 1.1rem; }
+        .cursor-blink { display: inline-block; width: 12px; height: 1.4rem; background: #00FF41; animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 8px;}
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- 爱好：拍立得盲盒 --- */
+        .polaroid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .polaroid { background: #fff; padding: 15px 15px 30px 15px; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: rotate(-2deg); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+        .polaroid img { width: 100%; height: 220px; object-fit: cover; margin-bottom: 15px; border: 1px solid #eee; }
+        .polaroid h4 { color: #111; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; text-align: center; }
+        .polaroid p { color: #666; font-size: 0.85rem; text-align: center; margin-top: 5px; }
+
+        @media (max-width: 900px) {
+            .pellmell-container { flex-direction: column; gap: 2rem; }
+            .pellmell-left { position: relative; top: 0; }
+            .pellmell-right { margin-top: 1rem; }
+            .hero { flex-direction: column-reverse; text-align: left; align-items: flex-start; }
+            .pro-item { grid-template-columns: 1fr; gap: 1rem; }
+            .pro-logo { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Liyi GAO.</div>
+        <div class="nav-links">
+            <span style="font-size: 0.9rem; color: var(--text-muted); display: none; @media(min-width: 768px){display: block;}">Audencia PGE '26</span>
+            <a href="https://www.linkedin.com/in/liyi-gao" target="_blank" class="linkedin-btn">Connect on LinkedIn</a>
+        </div>
+    </nav>
+
+    <div data-theme="theme-light" class="theme-trigger"></div>
+
+    <header class="hero">
+        <div class="hero-text reveal">
+            <h1>The Evolution of a<br><span style="color: var(--accent);">Product Thinker.</span></h1>
+            <p>Merging grassroots ToC intuition with structured FMCG strategies and AI-driven workflows. I build solutions that connect with people and scale with data.</p>
+            
+            <div class="skills-matrix reveal delay-1">
+                <h4>Language & Tech Arsenal</h4>
+                <div class="skill-tags">
+                    <div class="skill-pill">🇨🇳 Mandarin</div>
+                    <div class="skill-pill">🇫🇷 French (C1)</div>
+                    <div class="skill-pill">🇬🇧 English (C2)</div>
+                    <div class="skill-pill">SQL</div>
+                    <div class="skill-pill">Google Analytics</div>
+                    <div class="skill-pill">Excel</div>
+                    <div class="skill-pill">PowerPoint</div>
+                    <div class="skill-pill">Canva</div>
+                </div>
+            </div>
+        </div>
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace08e9de3e.webp" alt="Liyi Gao" class="hero-image reveal delay-2">
+    </header>
+
+    <section class="section-wrapper">
+        <h2 class="heading-font reveal" style="font-size: 2.5rem; margin-bottom: 1rem;">Self-Growth & Entrepreneurial Journey</h2>
+        
+        <div class="timeline-section" id="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="timeline-dot" id="timeline-dot"></div>
+
+            <div class="timeline-node reveal">
+                <div class="node-tag">Phase 1: User Empathy & MVP</div>
+                <h3>The Ultimate MVP: Grandma's Stall</h3>
+                <p>When my grandma's garden had a surplus, I took the bio vegetables to the rural market. I learned that regardless of the product, reducing cognitive load with direct copywriting is the core of user conversion.</p>
+                <div class="grid-2col">
+                    <figure>
+                        <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bc750fb.webp" alt="Veggies">
+                        <figcaption>Freshly harvested produce ready for the market.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bcf1eba.webp" alt="Sign" style="object-fit: contain; background: #EAE8E3;">
+                        <figcaption>Bio veggies & cardboard copywriting: reducing cognitive load at the point of sale.</figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <div class="timeline-node reveal">
+                <div class="node-tag">Phase 1: Brand Positioning</div>
+                <h3>My First Lesson in DTC (Age 15)</h3>
+                <p>Spotted the early trend of Japanese stationery. By curating high-quality items and unifying the visual display, I created a distinct brand vibe at a local flea market, validating premium pricing strategies.</p>
+                
+                <div class="h-scroll-container">
+                    <figure class="h-scroll-item">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980a05c1.webp" alt="Sign">
+                        <figcaption>Hand-drawn signage to establish brand identity.</figcaption>
+                    </figure>
+                    <figure class="h-scroll-item">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa9807e141.webp" alt="Curating">
+                        <figcaption>Curating Japanese stationery trends.</figcaption>
+                    </figure>
+                    <figure class="h-scroll-item">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980687c3.webp" alt="Stationery" style="object-position: top;">
+                        <figcaption>Validating premium pricing through cohesive visual merchandising.</figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <div data-theme="theme-brand" class="theme-trigger" style="position: absolute; top: 60%;"></div>
+
+            <div class="timeline-node">
+                <div class="pellmell-container">
+                    
+                    <div class="pellmell-left reveal">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa31d4774d.webp" alt="O2O Logo" class="project-logo">
+                        <div class="node-tag">Phase 2: Scaling the Ecosystem</div>
+                        <h3>Architecting a Campus O2O Network</h3>
+                        <p>Transitioned from single-point sales to systemic operations. Founded a digital business featuring online ordering and offline delivery, building a complete closed-loop supply chain.</p>
+                        <div class="data-grid">
+                            <div><h4>400+</h4><span>Monthly Active Users</span></div>
+                            <div><h4>80%</h4><span>Repurchase Rate</span></div>
+                            <div><h4><5%</h4><span>Perishable Waste</span></div>
+                        </div>
+                    </div>
+
+                    <div class="pellmell-right">
+                        <figure class="pellmell-img-wrapper reveal">
+                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="UI">
+                            <figcaption>Frictionless online storefront with clear SKU categorization & promotions.</figcaption>
+                        </figure>
+                        
+                        <figure class="pellmell-img-wrapper reveal delay-1">
+                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32c18309.webp" alt="Packaging">
+                            <figcaption>Independent packaging design paired with dedicated dorm-level shelves.</figcaption>
+                        </figure>
+
+                        <figure class="pellmell-img-wrapper reveal">
+                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa54463452.webp" alt="Backend">
+                            <figcaption>Data-driven backend order collection for precise demand forecasting.</figcaption>
+                        </figure>
+
+                        <figure class="pellmell-img-wrapper reveal delay-1">
+                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa55a4e555.webp" alt="CRM">
+                            <figcaption>High-retention private domain CRM managing active users.</figcaption>
+                        </figure>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div data-theme="theme-dark" class="theme-trigger"></div>
+
+    <section class="section-wrapper" style="padding-top: 2rem;">
+        <h2 class="heading-font reveal" style="font-size: 2.5rem;">Sharpening the Professional Arsenal</h2>
+        <div class="pro-list">
+            
+            <div class="pro-item reveal">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb263e823.webp" alt="WL Logo" class="pro-logo">
+                <div>
+                    <div class="pro-meta">Canton, China | Mar 2025 - Jun 2025</div>
+                    <h4>Wealthfields Lohmann (FMCG)</h4>
+                    <p>Focus: 360° Brand Partnerships & Go-to-Market</p>
+                    <ul class="pro-bullets">
+                        <li>Orchestrated complex Go-to-Market activations linking offline marathon sponsorships with live-streaming events (50k+ concurrent viewers).</li>
+                        <li>Elevated marketing ROI from 0.2 to 1.0+ by screening top-tier MCNs/KOLs based on rigorous audience-content matching.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pro-item reveal">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a0adf8.webp" alt="MMA Logo" class="pro-logo">
+                <div>
+                    <div class="pro-meta">Canton, China | Jan 2023 - Aug 2023</div>
+                    <h4>MMA Brand Services Pte. Ltd. (Singapore Unicorn)</h4>
+                    <p>Focus: E-com Supply Chain & Sourcing</p>
+                    <ul class="pro-bullets">
+                        <li>Accelerated the Product Development lifecycle for Amazon SKUs by conducting robust B2B sourcing and market mapping.</li>
+                        <li>Reduced logistics and packaging costs by 20-40% through rigorous technical reviews and international supplier negotiations.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pro-item reveal">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace46132100.webp" alt="TAL Logo" class="pro-logo">
+                <div>
+                    <div class="pro-meta">Guangzhou, China | Nov 2023 - Jun 2024</div>
+                    <h4>TAL Education Group (学而思)</h4>
+                    <p>Focus: EdTech & Audience Engagement</p>
+                    <ul class="pro-bullets">
+                        <li><strong>Public Speaking:</strong> Delivered high-pressure live presentations to large audiences, achieving #1 performance among new instructors.</li>
+                        <li><strong>Knowledge Synthesis:</strong> Deconstructed complex Olympiad Math logic into simplified, engaging content for diverse stakeholders.</li>
+                        <li><strong>CRM & Retention:</strong> Secured a 100% renewal rate through proactive client relationship management and persuasive communication.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal">
+        <div class="sandbox-card">
+            <div class="node-tag" style="color: #00FF41;">> ./The_AI_Sandbox.sh</div>
+            <h3>Learning to Build <span class="cursor-blink"></span></h3>
+            <p>I'm currently exploring the frontier of <strong>Vibe Coding</strong> and AI-assisted development. While I'm still learning the technical ropes of digital architecture, I treat AI as a powerful strategic co-pilot.</p>
+            <p style="margin-top: 1rem;">By translating my business intuitions into structured prompts, I rapidly prototype solutions and validate ideas. My ultimate goal is to leverage these tools to exponentially increase marketing efficiency and pioneer dynamic user experiences.</p>
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal">
+        <h2 class="heading-font" style="font-size: 2.5rem; text-align: center; margin-bottom: 1rem;">When I'm not in front of my laptop...</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 3rem;">Maintaining the "hardware" and optimizing the "flow state".</p>
+        
+        <div class="polaroid-grid">
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd6071b398.webp" alt="Aviron">
+                <h4>Aviron / The Sync Engine</h4>
+                <p>Like cross-functional projects, every stroke requires absolute synchronization to move forward.</p>
+            </div>
+            
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd627aac3b.webp" alt="Randonnee" style="object-position: top;">
+                <h4>Randonnée / Navigating Ambiguity</h4>
+                <p>Mountain trails teach patience, endurance, and extreme focus when facing unpredictable terrain.</p>
+            </div>
+            
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd61bb0b34.webp" alt="Swimming">
+                <h4>Swimming / The Flow State</h4>
+                <p>System reboot. Tuning out external noise to focus on the iteration of rhythm and breathing under pressure.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem 0; border-top: 1px solid var(--card-border); margin-top: 4rem; color: var(--text-muted); font-size: 0.9rem;">
+        <p>Crafted with AI assistance & human intuition. © 2026 Liyi GAO.</p>
+    </footer>
+
+    <script>
+        // 1. Scroll Reveal (滑入动效)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // 2. 主题背景色切换 (Intersection Observer)
+        const themeTriggers = document.querySelectorAll('.theme-trigger');
+        const themeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.body.className = entry.target.getAttribute('data-theme');
+                }
+            });
+        }, { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+
+        themeTriggers.forEach(trigger => themeObserver.observe(trigger));
+
+        // 3. 动态时间轴圆点 (Jasmina Denner Style)
+        const timelineContainer = document.getElementById('timeline-container');
+        const timelineDot = document.getElementById('timeline-dot');
+
+        window.addEventListener('scroll', () => {
+            if(!timelineContainer) return;
+            const rect = timelineContainer.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            // 计算容器在屏幕中的滚动比例
+            let scrollPercentage = (windowHeight / 2 - rect.top) / rect.height;
+            
+            // 限制圆点在容器内部的 0 到 100% 之间
+            if (scrollPercentage < 0) scrollPercentage = 0;
+            if (scrollPercentage > 1) scrollPercentage = 1;
+            
+            timelineDot.style.top = (scrollPercentage * 100) + '%';
+        });
+    </script>
+</body>
+</html>
