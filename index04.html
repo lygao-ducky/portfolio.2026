@@ -70,21 +70,21 @@
         .timeline-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--timeline-bg); transition: background 0.8s ease; }
         /* 修改后的图片滑动锚点 */
         .timeline-dot { 
-    position: absolute; 
-    left: -4px; /* 调整偏移量使其居中对齐线段 */
-    top: 0; 
-    width: 40px; /* 放大以清晰展示图片 */
-    height: 40px; 
-    border-radius: 50%; 
-    background-image: url('https://picui.ogmua.cn/s1/2026/03/08/69acea8d20af2.webp');
-    background-size: contain; /* 保证图片完整显示 */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #fff; /* 加一个纯白底色，自带抠图效果 */
-    z-index: 2; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-    transition: top 0.1s ease-out; /* 让滑动更丝滑 */
-}
+            position: absolute; 
+            left: -4px; /* 调整偏移量使其居中对齐线段 */
+            top: 0; 
+            width: 40px; /* 放大以清晰展示图片 */
+            height: 40px; 
+            border-radius: 50%; 
+            background-image: url('https://picui.ogmua.cn/s1/2026/03/08/69acea8d20af2.webp');
+            background-size: contain; /* 保证图片完整显示 */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #fff; /* 加一个纯白底色，自带抠图效果 */
+            z-index: 2; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+            transition: top 0.1s ease-out; /* 让滑动更丝滑 */
+        }
         .timeline-node { margin-bottom: 5rem; position: relative; }
         .node-tag { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; font-weight: 600; }
         .timeline-node h3 { font-size: 2rem; margin-bottom: 1rem; }
@@ -92,11 +92,12 @@
 
         /* 图片注释样式 */
         figure { margin: 0; }
-        figcaption { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); font-style: italic; border-left: 2px solid var(--accent); padding-left: 10px; }
+        figcaption { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); font-style: italic; border-left: 2px solid var(--accent); padding-left: 10px; line-height: 1.4; }
 
-        /* 节点 1：图片并排 */
-        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        .grid-2col img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; }
+        /* 节点 1：3图并排 (升级版排版) */
+        .grid-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-3col img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; }
+        @media (max-width: 900px) { .grid-3col { grid-template-columns: 1fr; } }
 
         /* 节点 2：原生横向滑动图库 (隐藏滚动条) */
         .h-scroll-container { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; }
@@ -127,6 +128,13 @@
         .pro-item p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1rem; }
         .pro-bullets { padding-left: 1.2rem; color: var(--text-muted); }
         .pro-bullets li { margin-bottom: 0.5rem; }
+
+        /* --- 工作经历图片横向滑动 CSS (已补回) --- */
+        .slider-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-snap-type: x mandatory; margin-top: 1.5rem; }
+        .slider-container::-webkit-scrollbar { height: 6px; }
+        .slider-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+        .slider-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .slider-container img { width: auto; object-fit: cover; border-radius: 12px; scroll-snap-align: start; border: 1px solid var(--card-border); }
 
         /* --- AI 探索实验室 --- */
         .sandbox-card { background: #050505; border: 1px solid #333; color: #00FF41; font-family: 'Courier New', Courier, monospace; padding: 3rem; border-radius: 24px; margin-top: 2rem;}
@@ -199,7 +207,8 @@
                 <div class="node-tag">Phase 1: User Empathy & MVP</div>
                 <h3>The Ultimate MVP: Grandma's Stall</h3>
                 <p>When my grandma's garden had a surplus, I took the bio vegetables to the rural market. I learned that regardless of the product, reducing cognitive load with direct copywriting is the core of user conversion.</p>
-                <div class="grid-2col">
+                
+                <div class="grid-3col">
                     <figure>
                         <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bc750fb.webp" alt="Veggies">
                         <figcaption>Freshly harvested produce ready for the market.</figcaption>
@@ -207,6 +216,10 @@
                     <figure>
                         <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd58a8b1b8.webp" alt="Sign" style="object-fit: contain; background: #EAE8E3;">
                         <figcaption>Bio veggies & cardboard copywriting: reducing cognitive load at the point of sale.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bcedc55.webp" alt="Holding Veggies" style="object-position: top;">
+                        <figcaption>Connecting directly with the end consumers.</figcaption>
                     </figure>
                 </div>
             </div>
@@ -292,6 +305,12 @@
                         <li>Orchestrated complex Go-to-Market activations linking offline marathon sponsorships with live-streaming events (50k+ concurrent viewers).</li>
                         <li>Elevated marketing ROI from 0.2 to 1.0+ by screening top-tier MCNs/KOLs based on rigorous audience-content matching.</li>
                     </ul>
+                    <div class="slider-container" style="margin-top: 1.5rem;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3c7db80.webp" alt="Marathon Live" style="height: 180px;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac2f76d0b.webp" alt="50k Stream" style="height: 180px;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3780c84.webp" alt="Setup" style="height: 180px;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac4516619.webp" alt="Offline Sales" style="height: 180px;">
+                    </div>
                 </div>
             </div>
 
@@ -305,6 +324,9 @@
                         <li>Accelerated the Product Development lifecycle for Amazon SKUs by conducting robust B2B sourcing and market mapping.</li>
                         <li>Reduced logistics and packaging costs by 20-40% through rigorous technical reviews and international supplier negotiations.</li>
                     </ul>
+                    <div class="slider-container" style="margin-top: 1.5rem;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc460e1939.webp" alt="Team" style="height: 180px;">
+                    </div>
                 </div>
             </div>
 
@@ -319,6 +341,12 @@
                         <li><strong>Knowledge Synthesis:</strong> Deconstructed complex Olympiad Math logic into simplified, engaging content for diverse stakeholders.</li>
                         <li><strong>CRM & Retention:</strong> Secured a 100% renewal rate through proactive client relationship management and persuasive communication.</li>
                     </ul>
+                    <div class="slider-container" style="margin-top: 1.5rem;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8ad0d1f7.webp" alt="Award" style="height: 180px;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8059fb3d.webp" alt="Class" style="height: 180px;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc80649ccc.webp" alt="Kids" style="height: 180px;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc80411e81.webp" alt="Poster" style="height: 180px; object-fit: cover;">
+                    </div>
                 </div>
             </div>
 
