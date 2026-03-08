@@ -68,8 +68,23 @@
         /* --- 动态时间轴 (Jasmina Denner Style) --- */
         .timeline-section { position: relative; padding-left: 50px; margin-top: 4rem; }
         .timeline-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--timeline-bg); transition: background 0.8s ease; }
-        .timeline-dot { position: absolute; left: 8px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); z-index: 2; transition: background 0.8s ease; box-shadow: 0 0 10px var(--accent); }
-
+        /* 修改后的图片滑动锚点 */
+        .timeline-dot { 
+    position: absolute; 
+    left: -4px; /* 调整偏移量使其居中对齐线段 */
+    top: 0; 
+    width: 40px; /* 放大以清晰展示图片 */
+    height: 40px; 
+    border-radius: 50%; 
+    background-image: url('https://picui.ogmua.cn/s1/2026/03/08/69ace46132100.webp');
+    background-size: contain; /* 保证图片完整显示 */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff; /* 加一个纯白底色，自带抠图效果 */
+    z-index: 2; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+    transition: top 0.1s ease-out; /* 让滑动更丝滑 */
+}
         .timeline-node { margin-bottom: 5rem; position: relative; }
         .node-tag { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; font-weight: 600; }
         .timeline-node h3 { font-size: 2rem; margin-bottom: 1rem; }
@@ -190,7 +205,7 @@
                         <figcaption>Freshly harvested produce ready for the market.</figcaption>
                     </figure>
                     <figure>
-                        <img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bcf1eba.webp" alt="Sign" style="object-fit: contain; background: #EAE8E3;">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd58a8b1b8.webp" alt="Sign" style="object-fit: contain; background: #EAE8E3;">
                         <figcaption>Bio veggies & cardboard copywriting: reducing cognitive load at the point of sale.</figcaption>
                     </figure>
                 </div>
@@ -204,11 +219,11 @@
                 <div class="h-scroll-container">
                     <figure class="h-scroll-item">
                         <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980a05c1.webp" alt="Sign">
-                        <figcaption>Hand-drawn signage to establish brand identity.</figcaption>
+                        <figcaption>Curating Japanese stationery trends.</figcaption>
                     </figure>
                     <figure class="h-scroll-item">
                         <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa9807e141.webp" alt="Curating">
-                        <figcaption>Curating Japanese stationery trends.</figcaption>
+                        <figcaption>Hand-drawn signage to establish brand identity.</figcaption>
                     </figure>
                     <figure class="h-scroll-item">
                         <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980687c3.webp" alt="Stationery" style="object-position: top;">
@@ -235,11 +250,6 @@
                     </div>
 
                     <div class="pellmell-right">
-                        <figure class="pellmell-img-wrapper reveal">
-                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="UI">
-                            <figcaption>Frictionless online storefront with clear SKU categorization & promotions.</figcaption>
-                        </figure>
-                        
                         <figure class="pellmell-img-wrapper reveal delay-1">
                             <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32c18309.webp" alt="Packaging">
                             <figcaption>Independent packaging design paired with dedicated dorm-level shelves.</figcaption>
@@ -248,6 +258,11 @@
                         <figure class="pellmell-img-wrapper reveal">
                             <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa54463452.webp" alt="Backend">
                             <figcaption>Data-driven backend order collection for precise demand forecasting.</figcaption>
+                        </figure>
+                        
+                        <figure class="pellmell-img-wrapper reveal">
+                            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="UI">
+                            <figcaption>Frictionless online storefront with clear SKU categorization & promotions.</figcaption>
                         </figure>
 
                         <figure class="pellmell-img-wrapper reveal delay-1">
@@ -326,19 +341,19 @@
         <div class="polaroid-grid">
             <div class="polaroid">
                 <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd6071b398.webp" alt="Aviron">
-                <h4>Aviron / The Sync Engine</h4>
+                <h4>Aviron</h4>
                 <p>Like cross-functional projects, every stroke requires absolute synchronization to move forward.</p>
             </div>
             
             <div class="polaroid">
-                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd627aac3b.webp" alt="Randonnee" style="object-position: top;">
-                <h4>Randonnée / Navigating Ambiguity</h4>
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace95122ea4.webp" alt="Randonnee" style="object-position: top;">
+                <h4>Randonnée</h4>
                 <p>Mountain trails teach patience, endurance, and extreme focus when facing unpredictable terrain.</p>
             </div>
             
             <div class="polaroid">
                 <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd61bb0b34.webp" alt="Swimming">
-                <h4>Swimming / The Flow State</h4>
+                <h4>Swimming</h4>
                 <p>System reboot. Tuning out external noise to focus on the iteration of rhythm and breathing under pressure.</p>
             </div>
         </div>
