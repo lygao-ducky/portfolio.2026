@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liyi GAO | Aspiring Brand Builder & Product Marketer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================
+           [🌟 米白棕高级色调]
+           ========================================================== */
+        :root {
+            --bg-color: #F4F1EC; 
+            --text-main: #2C2A29; 
+            --text-muted: #7A7571; 
+            --card-border: rgba(44, 42, 41, 0.1);
+            --accent: #C28E75; 
+            --timeline-bg: rgba(44, 42, 41, 0.15);
+            --card-bg: #FFFFFF;
+        }
+
+        body.theme-light {
+            --bg-color: #F4F1EC; --text-main: #2C2A29; --text-muted: #7A7571; --card-border: rgba(44, 42, 41, 0.1); --accent: #C28E75; --card-bg: #FFFFFF;
+        }
+        body.theme-brand {
+            --bg-color: #E8EDE4; --text-main: #1F2E21; --text-muted: #566D5A; --card-border: rgba(31, 46, 33, 0.15); --accent: #4A7051; --card-bg: #FFFFFF;
+        }
+        body.theme-dark {
+            --bg-color: #1E1D1C; --text-main: #F4F1EC; --text-muted: #A39D98; --card-border: rgba(244, 241, 236, 0.1); --accent: #D9A992; --card-bg: #2C2A29;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html, body { overflow-x: clip; scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; transition: background-color 0.8s ease, color 0.8s ease; }
+
+        h1, h2, h3, .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        .section-wrapper, .hero, .timeline-node, .sandbox-card, .hobbies-section { 
+            padding: 4rem 5%; max-width: 1300px; margin: 0 auto; position: relative; z-index: 10; isolation: isolate;
+        }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
+
+        /* [🔥 更新] 透明涂鸦贴纸样式：统一降低透明度为背景水印 */
+        .doodle-sticker { 
+            position: absolute; height: auto; 
+            z-index: -1; 
+            pointer-events: none; 
+            mix-blend-mode: multiply; 
+            opacity: 0.15; /* 极低透明度，防止干扰阅读 */
+        }
+        body.theme-dark .doodle-sticker { filter: invert(1); mix-blend-mode: screen; opacity: 0.1;}
+        
+        p, h3, h4, li, figcaption { position: relative; z-index: 2; }
+
+        /* 全屏跑马灯 */
+        .marquee-bg {
+            position: fixed; top: 40%; left: 0; width: 200%; font-size: 15vw; font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: var(--text-main); opacity: 0.03; white-space: nowrap; z-index: 1; pointer-events: none; animation: marqueeAnim 40s linear infinite;
+        }
+        @keyframes marqueeAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* --- 导航栏 --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; position: relative; z-index: 20; border-bottom: 1px solid var(--card-border); transition: border-color 0.8s ease; }
+        .nav-brand { display: flex; align-items: center; gap: 1rem; }
+        .nav-brand img { height: 35px; object-fit: contain; }
+        .nav-brand span { font-size: 0.95rem; font-weight: 600; color: var(--text-main); letter-spacing: 1px; font-family: 'Space Grotesk', sans-serif;}
+        .linkedin-btn { background: var(--text-main); color: var(--bg-color); padding: 0.6rem 1.5rem; border-radius: 30px; font-weight: 500; text-decoration: none; font-size: 0.9rem; transition: transform 0.3s ease; }
+
+        /* --- 首屏 --- */
+        .hero { display: flex; align-items: center; justify-content: space-between; min-height: 80vh; }
+        .hero-left { flex: 0 0 50%; position: relative; }
+        .hero-right { flex: 0 0 45%; position: relative; }
+        
+        .availability-badge { display: inline-block; padding: 0.4rem 1.2rem; border: 1px solid var(--accent); border-radius: 30px; color: var(--accent); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; background: rgba(194, 142, 117, 0.1); }
+        .hero-text h1 { font-size: clamp(3rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -2px; }
+        .hero-text p { font-size: 1.15rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2rem; }
+        
+        .hero-image-wrapper { width: 100%; height: 65vh; border-radius: 16px; overflow: hidden; clip-path: inset(30% 30% 30% 30%); animation: expandImage 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transform: scale(1.3); animation: scaleDownImage 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; }
+        .hero-name { position: absolute; bottom: -5%; left: -20%; font-size: 8vw; font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: #fff; mix-blend-mode: exclusion; z-index: 10; opacity: 0; animation: fadeUp 1s ease 1.2s forwards; }
+
+        @keyframes expandImage { to { clip-path: inset(0 0 0 0); } }
+        @keyframes scaleDownImage { to { transform: scale(1); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .skill-pill { padding: 0.5rem 1rem; border: 1px solid var(--card-border); border-radius: 8px; font-weight: 500; font-size: 0.9rem; background: var(--card-bg); color: var(--text-main);}
+
+        /* 纯文字视差放大过渡区 */
+        .diary-reveal-container { height: 140vh; position: relative; z-index: 15; margin-top: 5vh; }
+        .diary-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .diary-bg-text { font-size: clamp(2rem, 4vw, 4rem); font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: var(--text-main); text-align: center; opacity: 0; letter-spacing: 2px; transform: scale(0.6); will-change: transform, opacity; }
+
+        /* --- 动态时间轴 --- */
+        .timeline-section { position: relative; padding-left: 50px; margin-top: 2rem; }
+        .timeline-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--timeline-bg); transition: background 0.8s ease; }
+        .timeline-dot { 
+            position: absolute; left: -4px; top: 0; width: 40px; height: 40px; border-radius: 50%; 
+            background-image: url('https://picui.ogmua.cn/s1/2026/03/09/69aee89aee031.webp'); 
+            background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #fff; 
+            z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: top 0.1s ease-out; 
+        }
+
+        /* [🔥 更新] 缩短三段经历之间的间距 (保留内部图文间距) */
+        .timeline-node { margin-bottom: 4rem; position: relative; }
+        .node-tag { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; font-weight: 600; }
+        
+        figure { margin: 0; }
+        figcaption { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); font-style: italic; border-left: 2px solid var(--accent); padding-left: 10px; line-height: 1.4; }
+
+        .grid-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 2rem; }
+        .grid-3col img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; }
+
+        .h-scroll-container { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; margin-top: 2rem; }
+        .h-scroll-container::-webkit-scrollbar { display: none; }
+        .h-scroll-item { flex: 0 0 70%; scroll-snap-align: start; }
+        @media (min-width: 768px) { .h-scroll-item { flex: 0 0 45%; } }
+        .h-scroll-item img { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; }
+
+        /* O2O 排版 */
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; margin-bottom: 2rem; }
+        .data-highlight { color: var(--text-main); font-size: 2.8rem; font-weight: 800; display: block; font-family: 'Space Grotesk', sans-serif; line-height: 1.1; }
+        .data-highlight span { color: var(--accent); }
+        .data-highlight-text { display: inline-block; padding: 0.8rem 1.2rem; background-color: var(--card-bg); color: var(--accent); border-radius: 8px; font-weight: 600; margin-top: 1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: 1px solid var(--card-border); }
+
+        /* 过渡段落：工作照片散落视差 */
+        .transition-section { position: relative; height: 160vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; margin: 4rem 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);}
+        .transition-bg-words { position: absolute; top: 40%; text-align: center; color: var(--text-muted); font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 4rem); font-weight: 700; opacity: 0.1; line-height: 1.2; letter-spacing: 2px; text-transform: uppercase; z-index: 1;}
+        .scatter-img { position: absolute; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); object-fit: cover; z-index: 2; border: 4px solid var(--card-bg); opacity: 0;}
+        
+        /* 统一所有工作经历排版：全宽卡片 + 画廊滑动 */
+        .experience-container { display: flex; flex-direction: column; gap: 3rem; margin-top: 1rem;}
+        .pro-card { background: var(--card-bg); padding: 3rem; border-radius: 24px; border: 1px solid var(--card-border); box-shadow: 0 15px 40px rgba(0,0,0,0.03); transition: transform 0.3s ease;}
+        .pro-card:hover { transform: translateY(-5px); border-color: var(--accent);}
+        
+        .pro-header { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .pro-logo { width: 70px; height: 70px; object-fit: contain; background: #fff; padding: 5px; border-radius: 16px; border: 1px solid var(--card-border); flex-shrink: 0;}
+        .pro-meta { font-family: 'Space Grotesk', sans-serif; color: var(--accent); font-size: 0.95rem; margin-bottom: 0.3rem; letter-spacing: 1px; text-transform: uppercase;}
+        .pro-header h4 { font-size: 2rem; line-height: 1.2;}
+        .pro-focus { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 500;}
+        
+        .pro-bullets { padding-left: 1.2rem; color: var(--text-muted); font-size: 1.05rem;}
+        .pro-bullets li { margin-bottom: 0.8rem; }
+
+        /* 画廊滑动容器 */
+        .gallery-container { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; margin-top: 2rem; }
+        .gallery-container::-webkit-scrollbar { height: 6px; }
+        .gallery-container::-webkit-scrollbar-track { background: var(--card-border); border-radius: 10px; }
+        .gallery-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        .gallery-container figure { flex: 0 0 auto; scroll-snap-align: center; }
+        .gallery-container img { height: 280px; width: auto; object-fit: cover; border-radius: 12px; border: 1px solid var(--card-border);}
+
+        /* AI 毛玻璃卡片 */
+        .sandbox-card { 
+            background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(16px);
+            padding: 4rem; border-radius: 24px; margin-top: 2rem; color: var(--text-main); position: relative; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        /* 爱好盲盒 */
+        .hobbies-section { position: relative; overflow: hidden; }
+        .polaroid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; position: relative; z-index: 5;}
+        .polaroid { background: #fff; padding: 15px 15px 30px 15px; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: rotate(-2deg); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 11; }
+        .polaroid img { width: 100%; height: 220px; object-fit: cover; margin-bottom: 15px; border: 1px solid #f0f0f0;}
+        .polaroid h4 { color: #111; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; text-align: center; }
+        .polaroid p { color: #666; font-size: 0.85rem; text-align: center; margin-top: 5px; }
+
+        @media (max-width: 900px) {
+            .hero { flex-direction: column-reverse; gap: 2rem; }
+            .hero-left, .hero-right { width: 100%; }
+            .hero-name { font-size: 4rem; left: 0; mix-blend-mode: normal; color: var(--text-main); }
+            .grid-3col { grid-template-columns: 1fr; }
+            .data-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .gallery-container img { height: 220px; }
+            .nav-brand span { display: none; }
+            .pro-card { padding: 2rem 1.5rem; }
+            .pro-header { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-brand">
+            <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb08d988a.webp" alt="Audencia Logo">
+            <span>Audencia GE Program (PGE)</span>
+        </div>
+        <div class="nav-links">
+            <a href="https://www.linkedin.com/in/liyi-gao" target="_blank" class="linkedin-btn">LinkedIn</a>
+        </div>
+    </nav>
+
+    <div data-theme="theme-light" class="theme-trigger"></div>
+
+    <header class="hero section-wrapper">
+        <div class="hero-left reveal">
+            <div class="availability-badge">Internship for gap year starting July 2026</div>
+            
+            <div class="hero-text">
+                <h1>The Evolution of a<br><span style="color: var(--accent);">Brand Builder.</span></h1>
+                <p>Dedicated to translating deep <strong>Consumer Insights</strong> into impactful <strong>Go-To-Market (GTM) strategies</strong>. I aspire to build FMCG and beauty brands with depth and style, bridging the gap between product innovation and brand storytelling to solve real human needs.</p>
+            </div>
+            <div class="skill-tags reveal delay-1">
+                <div class="skill-pill">🇨🇳 Mandarin</div>
+                <div class="skill-pill">🇫🇷 French (C1)</div>
+                <div class="skill-pill">🇬🇧 English (C2)</div>
+                <div class="skill-pill">SQL</div>
+                <div class="skill-pill">Google Analytics</div>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="hero-image-wrapper">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad689ba1d37.webp" alt="Liyi Gao">
+            </div>
+            <div class="hero-name">Liyi GAO</div>
+        </div>
+    </header>
+
+    <section class="diary-reveal-container" id="diary-container">
+        <div class="diary-sticky">
+            <h2 class="diary-bg-text" id="diary-text">IT ALL STARTED WITH EMPATHY.</h2>
+        </div>
+    </section>
+
+    <section class="section-wrapper">
+        <h2 class="heading-font reveal" style="font-size: 2.5rem; margin-bottom: 1rem;">Self-Growth & Entrepreneurial Journey</h2>
+        <div class="timeline-section" id="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="timeline-dot" id="timeline-dot"></div>
+
+            <div class="timeline-node reveal">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566dc0467.webp" class="doodle-sticker" style="top: 0; right: 0; width: 140px; transform: rotate(10deg);" alt="Doodle">
+                
+                <div class="node-tag">Phase 1 (2013): Consumer Insights & Early Prototyping</div>
+                <h3>The Ultimate MVP: Grandma's Stall</h3>
+                <p>When my grandma's garden had a surplus, I took the bio vegetables to the rural market. I learned that reducing cognitive load with direct copywriting is the core of user conversion.</p>
+                <div class="grid-3col">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bc750fb.webp" alt="Veggies"><figcaption>Freshly harvested produce.</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd58a8b1b8.webp" alt="Sign" style="object-fit: cover;"><figcaption>Bio veggies & cardboard copywriting.</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/05/69a858bcedc55.webp" alt="Holding Veggies" style="object-position: top;"><figcaption>Direct consumer connection.</figcaption></figure>
+                </div>
+            </div>
+
+            <div class="timeline-node reveal">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566383a3b.webp" class="doodle-sticker" style="top: 20%; right: -20px; width: 160px; transform: rotate(-5deg);" alt="Doodle">
+                
+                <div class="node-tag">Phase 1 (2015): Brand Positioning</div>
+                <h3>My First Lesson in DTC</h3>
+                <p>Spotted the early trend of Japanese stationery. By curating high-quality items and unifying the visual display, I created a distinct brand vibe at a flea market, successfully validating premium pricing strategies.</p>
+                <div class="h-scroll-container">
+                    <figure class="h-scroll-item"><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980a05c1.webp" alt="Sign"><figcaption>Establishing brand identity.</figcaption></figure>
+                    <figure class="h-scroll-item"><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa9807e141.webp" alt="Curating"><figcaption>Trend curation.</figcaption></figure>
+                    <figure class="h-scroll-item"><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980687c3.webp" alt="Stationery" style="object-position: top;"><figcaption>Visual merchandising.</figcaption></figure>
+                </div>
+            </div>
+
+            <div data-theme="theme-brand" class="theme-trigger" style="position: absolute; top: 55%;"></div>
+
+            <div class="timeline-node reveal">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa31d4774d.webp" alt="O2O Logo" style="width: 80px; height: 80px; object-fit: contain; background: #fff; border-radius: 16px; padding: 5px; margin-bottom: 1.5rem; border: 1px solid var(--card-border);">
+                
+                <div class="node-tag">Phase 2 (2022): Architecting a Campus O2O Retail Network</div>
+                <h3>Architecting a Campus O2O Network</h3>
+                <ul class="pro-bullets" style="padding-left: 0; list-style: none;">
+                    <li><strong>Founded</strong> a new digital business ecosystem with online ordering and offline delivery, initially focusing on fresh fruit and successfully scaling to high-margin fruit by-products.</li>
+                    <li><strong>Directed</strong> end-to-end operations, taking full ownership of procurement, SKU selection, team coordination, and daily customer service management.</li>
+                    <li><strong>Forged</strong> strategic partnerships with student clubs and local coffee shops, effectively securing offline pop-up spaces and co-hosting promotional events.</li>
+                    <li><strong>Designed</strong> high-conversion promotional materials and tailored sales campaigns, driving daily engagement across 1,000+ private-domain users.</li>
+                </ul>
+                
+                <div class="data-grid">
+                    <div><span class="data-highlight"><span>400</span>+</span><span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Monthly Active Users</span></div>
+                    <div><span class="data-highlight"><span>80</span>%</span><span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Repurchase Rate</span></div>
+                    <div><span class="data-highlight"><span><5</span>%</span><span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Perishable Waste</span></div>
+                </div>
+
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32c18309.webp"><figcaption>Dedicated dorm-level shelf system.</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa54463452.webp"><figcaption>Data-driven order collection.</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp"><figcaption>Frictionless UI.</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa55a4e555.webp"><figcaption>High-retention CRM.</figcaption></figure>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div data-theme="theme-dark" class="theme-trigger"></div>
+
+    <section class="transition-section" id="transition-container">
+        <div class="transition-bg-words">DATA DRIVEN<br>CONSUMER CENTRIC<br>CROSS-FUNCTIONAL</div>
+        <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3780c84.webp" class="scatter-img" id="s-img-1" style="width: 300px; height: 200px;">
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc460e1939.webp" class="scatter-img" id="s-img-2" style="width: 350px; height: 250px;">
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8059fb3d.webp" class="scatter-img" id="s-img-3" style="width: 280px; height: 350px;">
+        
+        <h2 class="heading-font reveal" style="font-size: 3rem; text-align: center; position: absolute; bottom: 10%; z-index: 5;">Sharpening the Professional Arsenal</h2>
+    </section>
+
+    <section class="section-wrapper" style="padding-top: 0;">
+        <div class="experience-container">
+            
+            <div class="pro-card reveal">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb263e823.webp" alt="WL Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Canton, China | Mar 2025 - Jun 2025</div>
+                        <h4>Wealthfields Lohmann (FMCG)</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: 360° Brand Partnerships & Go-to-Market</p>
+                <ul class="pro-bullets">
+                    <li><strong>Orchestrated</strong> complex offline marathon activations, overseeing booth construction, event staff allocation, and crowd flow routing optimization to ensure a seamless consumer journey.</li>
+                    <li><strong>Managed</strong> partner MCN agencies to synchronize on-the-ground physical events with online live-streaming broadcasts (50k+ viewers).</li>
+                    <li><strong>Elevated</strong> ROI from 0.2 to 1.0+ by meticulously mapping team responsibilities and executing rigorous audience-content matching.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3c7db80.webp"><figcaption>Marathon Live</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac2f76d0b.webp"><figcaption>50k+ Stream</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3780c84.webp"><figcaption>Setup</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac4516619.webp"><figcaption>Offline Sales</figcaption></figure>
+                </div>
+            </div>
+
+            <div class="pro-card reveal delay-1">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a0adf8.webp" alt="MMA Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Canton, China | Jan 2023 - Aug 2023</div>
+                        <h4>MMA Brand Services Pte. Ltd.</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: E-com Supply Chain & Sourcing</p>
+                <ul class="pro-bullets">
+                    <li>Accelerated Amazon SKU Product Development via robust B2B sourcing.</li>
+                    <li>Reduced logistics costs by 20-40% through international supplier negotiations.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc460e1939.webp"><figcaption>Supply Chain Team</figcaption></figure>
+                </div>
+            </div>
+
+            <div class="pro-card reveal">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace46132100.webp" alt="TAL Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Guangzhou, China | Nov 2023 - Jun 2024</div>
+                        <h4>TAL Education Group</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: EdTech & Audience Engagement</p>
+                <ul class="pro-bullets">
+                    <li><strong>Public Speaking:</strong> Delivered high-pressure live presentations to large audiences, achieving #1 performance among new instructors.</li>
+                    <li><strong>Knowledge Synthesis:</strong> Deconstructed complex Olympiad Math logic into simplified, engaging content for diverse stakeholders.</li>
+                    <li><strong>CRM & Retention:</strong> Secured a 100% renewal rate through proactive client relationship management and persuasive communication.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8ad0d1f7.webp"><figcaption>Top Performance</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8059fb3d.webp"><figcaption>Live Presentation</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc80649ccc.webp"><figcaption>Engagement</figcaption></figure>
+                </div>
+            </div>
+
+            <div class="pro-card reveal delay-1">
+                <div class="pro-header">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a08a8f.webp" alt="ACE Logo" class="pro-logo">
+                    <div>
+                        <div class="pro-meta">Nantes, France | Ongoing</div>
+                        <h4>Audencia Entrepreneur Club (ACE)</h4>
+                    </div>
+                </div>
+                <p class="pro-focus">Focus: PR, External Communication & Resource Orchestration</p>
+                <ul class="pro-bullets">
+                    <li><strong>Spearheaded</strong> external communications for the "DARE" initiative, successfully pitching and securing high-profile industry guest speakers and strategic sponsorships.</li>
+                    <li><strong>Directed</strong> cross-functional collaboration across departments, aligning core messaging and optimizing the efficiency of project execution.</li>
+                    <li><strong>Produced</strong> high-impact visual media assets and integrated promotional campaigns, significantly amplifying project visibility and audience engagement.</li>
+                </ul>
+                <div class="gallery-container">
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7b9d6766.webp"><figcaption>Event Planning</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7ba00aba.webp"><figcaption>Coordination</figcaption></figure>
+                    <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7ba160dd.webp"><figcaption>DARE Execution</figcaption></figure>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal">
+        <div class="sandbox-card">
+            <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566301faa.webp" class="doodle-sticker" style="bottom: 20px; right: 20px; width: 120px;" alt="Doodle Coding">
+            
+            <div class="node-tag" style="color: var(--accent); margin-bottom: 0.5rem;">Current Exploration: Agile Prototyping & Consumer Experiences</div>
+            <h3>Learning to Build</h3>
+            <p>Exploring AI-assisted tools to rapidly prototype consumer-facing solutions. I treat AI as a strategic co-pilot to translate business intuition into structured formats, aiming to exponentially increase <strong>marketing efficiency</strong> and pioneer dynamic, personalized <strong>brand experiences</strong>.</p>
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal hobbies-section">
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad56624cfb9.webp" class="doodle-sticker" style="top: 10%; left: 5%; width: 180px; transform: rotate(10deg);" alt="Rowing Doodle">
+        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566421611.webp" class="doodle-sticker" style="bottom: 20%; right: 5%; width: 160px; transform: rotate(-15deg);" alt="Hiking Doodle">
+
+        <h2 class="heading-font" style="font-size: 2.5rem; text-align: center; margin-bottom: 1rem;">When I'm not in front of my laptop...</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 3rem;">Maintaining the "hardware" and optimizing the "flow state".</p>
+        
+        <div class="polaroid-grid">
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd6071b398.webp">
+                <h4>Aviron</h4><p>Team synchronization.</p>
+            </div>
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace95122ea4.webp" style="object-position: top;">
+                <h4>Randonnée</h4><p>Navigating ambiguity.</p>
+            </div>
+            <div class="polaroid">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd61bb0b34.webp">
+                <h4>Swimming</h4><p>Rebooting the flow.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem 0; border-top: 1px solid var(--card-border); margin-top: 4rem; color: var(--text-muted); font-size: 0.9rem; position: relative; z-index: 10;">
+        <p>Crafted with AI assistance & human intuition. © 2026 Liyi GAO.</p>
+    </footer>
+
+    <script>
+        // 1. Reveal 动画
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) { reveals[i].classList.add("active"); }
+            }
+        }
+        window.addEventListener("scroll", reveal); reveal();
+
+        // 2. Bavet 风格日记纯文字视差放大 (减速淡出，控制大小)
+        const diaryContainer = document.getElementById('diary-container');
+        const diaryText = document.getElementById('diary-text');
+
+        window.addEventListener('scroll', () => {
+            if(diaryContainer && diaryText) {
+                const rect = diaryContainer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                let progress = -rect.top / (rect.height - windowHeight); 
+                
+                if (progress > 0 && progress <= 1) {
+                    // [🔥 修复] 锁定文字最大放大倍数为 1.1，不再无限放大
+                    let textScale = 0.8 + Math.pow(progress, 0.5) * 0.3; 
+                    
+                    // [🔥 修复] 淡出更慢，停留时间更长
+                    let textOpacity = 0;
+                    if(progress < 0.2) {
+                        textOpacity = progress * 5; // 0-20% 快速出现
+                    } else if (progress < 0.8) {
+                        textOpacity = 1; // 20%-80% 稳定停留
+                    } else {
+                        textOpacity = 1 - (progress - 0.8) * 5; // 80%-100% 缓慢淡出
+                    }
+                    
+                    diaryText.style.opacity = Math.max(textOpacity, 0);
+                    diaryText.style.transform = `scale(${textScale})`;
+                } else {
+                    diaryText.style.opacity = 0;
+                }
+            }
+        });
+
+        // 3. 过渡段落：工作照片散落特效
+        const transContainer = document.getElementById('transition-container');
+        const img1 = document.getElementById('s-img-1');
+        const img2 = document.getElementById('s-img-2');
+        const img3 = document.getElementById('s-img-3');
+
+        window.addEventListener('scroll', () => {
+            if(transContainer) {
+                const rect = transContainer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                let progress = 1 - (rect.bottom / (windowHeight + rect.height)); 
+                
+                if(progress > 0 && progress < 1) {
+                    let opacity = Math.sin(progress * Math.PI); 
+                    
+                    img1.style.opacity = opacity;
+                    img1.style.transform = `translate(${-100 + progress * 80}%, ${100 - progress * 150}%) rotate(${-15 + progress * 5}deg)`;
+                    
+                    img2.style.opacity = opacity;
+                    img2.style.transform = `translate(${10 - progress * 20}%, ${-100 + progress * 100}%) rotate(${5 - progress * 10}deg)`;
+                    
+                    img3.style.opacity = opacity;
+                    img3.style.transform = `translate(${100 - progress * 70}%, ${20 - progress * 50}%) rotate(${15 - progress * 15}deg)`;
+                }
+            }
+        });
+
+        // 4. 主题颜色切换
+        const themeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { document.body.className = entry.target.getAttribute('data-theme'); } });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+        document.querySelectorAll('.theme-trigger').forEach(trigger => themeObserver.observe(trigger));
+
+        // 5. 动态时间轴圆点跟随
+        const timelineContainer = document.getElementById('timeline-container');
+        const timelineDot = document.getElementById('timeline-dot');
+        window.addEventListener('scroll', () => {
+            if(!timelineContainer) return;
+            const rect = timelineContainer.getBoundingClientRect();
+            let scrollPercentage = (window.innerHeight / 2 - rect.top) / rect.height;
+            scrollPercentage = Math.min(Math.max(scrollPercentage, 0), 1);
+            timelineDot.style.top = (scrollPercentage * 100) + '%';
+        });
+    </script>
+</body>
+</html>
