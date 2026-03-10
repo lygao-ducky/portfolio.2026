@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liyi Gao | Brand Builder & Product Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================
+           [🌟 全新主题：冰曜石 (Obsidian & Ice Blue)]
+           ========================================================== */
+        :root {
+            --bg-color: #121212; /* 深碳灰/曜石黑 */
+            --surface-color: #1A1B1E; /* 微微浮起的卡片背景 */
+            --text-main: #E8EAED; /* 珍珠白/亮银灰 */
+            --text-muted: #9AA0A6; /* 质感次级灰 */
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent: #8AB4F8; /* 冰川淡蓝 / 极光蓝 */
+            --accent-glow: rgba(138, 180, 248, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; 
+            overflow-x: hidden; 
+        }
+
+        /* 阻止滚动穿透 (当抽屉打开时) */
+        body.drawer-open { overflow: hidden; }
+
+        h1, h2, h3, h4, .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        .section-wrapper { padding: 6rem 5%; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
+
+        /* 重点关键词高亮 (冰川蓝) */
+        strong { font-weight: 600; color: var(--accent); }
+
+        /* 元素滑入动效 */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
+
+        /* 深色模式下的涂鸦贴纸：反相并变成半透明白色/淡蓝印花 */
+        .doodle-sticker { 
+            position: absolute; height: auto; z-index: -1; pointer-events: none; 
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(180deg); /* 调成类似冰蓝色 */
+            mix-blend-mode: screen; 
+            opacity: 0.05; 
+        }
+
+        /* ==========================================================
+           [1] 底部悬浮胶囊导航 (Floating Pill Navigation)
+           ========================================================== */
+        .floating-nav {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 27, 30, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            z-index: 100;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .nav-link { color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+        .nav-link:hover { color: var(--accent); }
+        .nav-brand { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+
+        /* ==========================================================
+           [2] 首屏：极简去CV化 (The Hook)
+           ========================================================== */
+        .hero { display: flex; align-items: center; justify-content: space-between; min-height: 90vh; padding-bottom: 2rem;}
+        .hero-left { flex: 0 0 55%; position: relative; }
+        .hero-right { flex: 0 0 40%; position: relative; }
+        
+        .availability-badge { 
+            display: inline-block; padding: 0.4rem 1.2rem; border: 1px solid var(--accent); border-radius: 30px; 
+            color: var(--accent); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; 
+            margin-bottom: 2rem; background: var(--accent-glow); box-shadow: 0 0 15px var(--accent-glow);
+        }
+        
+        .hero-text h1 { font-size: clamp(3rem, 5vw, 5rem); line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -2px; font-weight: 800;}
+        .hero-text p { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; line-height: 1.8;}
+        
+        .hero-image-wrapper { width: 100%; height: 65vh; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); position: relative;}
+        .hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; filter: grayscale(20%); transition: filter 0.5s;}
+        .hero-image-wrapper:hover img { filter: grayscale(0%); }
+        
+        /* 名字作为设计元素压在图片上 */
+        .hero-name { position: absolute; bottom: 20px; left: -30px; font-size: 6vw; font-family: 'Space Grotesk', sans-serif; font-weight: 800; color: var(--accent); z-index: 10; pointer-events: none; text-shadow: 0 10px 30px rgba(0,0,0,0.8);}
+
+        /* ==========================================================
+           [3] O2O 旗舰项目：海报展示 + 点击抽屉 (Progressive Disclosure)
+           ========================================================== */
+        .poster-card {
+            background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 24px; padding: 3rem;
+            display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; group;
+        }
+        .poster-card:hover { transform: translateY(-5px) scale(1.01); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .poster-content { flex: 0 0 50%; z-index: 2;}
+        .poster-content h3 { font-size: 2.5rem; margin-bottom: 1rem; color: #fff; }
+        .poster-content p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;}
+        
+        .explore-btn { 
+            display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: var(--bg-color); 
+            padding: 0.8rem 1.8rem; border-radius: 30px; font-weight: 600; font-family: 'Space Grotesk', sans-serif;
+            transition: transform 0.3s;
+        }
+        .poster-card:hover .explore-btn { transform: translateX(10px); }
+        
+        .poster-visual { flex: 0 0 40%; height: 300px; border-radius: 16px; overflow: hidden; position: relative; }
+        .poster-visual img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.4s; }
+        .poster-card:hover .poster-visual img { opacity: 1; }
+
+        /* 抽屉 UI (Drawer) */
+        .drawer-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .drawer-overlay.open { opacity: 1; pointer-events: all; }
+        
+        .drawer {
+            position: fixed; right: 0; top: 0; height: 100vh; width: 650px; max-width: 100%;
+            background: var(--surface-color); z-index: 1000; transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto;
+            border-left: 1px solid var(--border-color); display: flex; flex-direction: column;
+        }
+        .drawer.open { transform: translateX(0); }
+        .drawer-header { padding: 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--surface-color); z-index: 10; }
+        .drawer-close { background: none; border: none; color: var(--text-main); font-size: 2rem; cursor: pointer; line-height: 1; }
+        .drawer-close:hover { color: var(--accent); }
+        .drawer-content { padding: 2rem; }
+        
+        /* 抽屉内的数据排版 */
+        .drawer .data-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 2rem 0; padding: 2rem; background: rgba(138, 180, 248, 0.05); border-radius: 16px; border: 1px solid var(--accent-glow);}
+        .drawer .data-highlight { font-size: 2.2rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--accent); line-height: 1;}
+        .drawer .data-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
+        .drawer-gallery img { width: 100%; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+
+        /* ==========================================================
+           [4] 工作经历：高级手风琴 (Accordion)
+           ========================================================== */
+        .accordion-item { border-bottom: 1px solid var(--border-color); }
+        .accordion-header { 
+            padding: 2.5rem 0; display: flex; align-items: center; justify-content: space-between; 
+            cursor: pointer; transition: padding 0.3s ease, background 0.3s;
+        }
+        .accordion-header:hover { padding-left: 1rem; }
+        .accordion-header:hover h4 { color: var(--accent); }
+        
+        .acc-title-area { display: flex; align-items: center; gap: 2rem; }
+        .acc-logo { width: 60px; height: 60px; object-fit: contain; background: #fff; padding: 5px; border-radius: 12px; }
+        .acc-title-area h4 { font-size: 1.8rem; transition: color 0.3s; margin-bottom: 0.3rem;}
+        .acc-meta { color: var(--text-muted); font-size: 0.95rem; font-family: 'Space Grotesk', sans-serif;}
+        
+        .acc-icon { font-size: 2rem; font-weight: 300; transition: transform 0.4s; color: var(--text-muted); }
+        .accordion-item.active .acc-icon { transform: rotate(45deg); color: var(--accent); }
+        
+        /* 现代手风琴展开黑科技 (Grid) */
+        .accordion-content-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .accordion-item.active .accordion-content-wrapper { grid-template-rows: 1fr; }
+        .accordion-content { overflow: hidden; }
+        
+        .acc-inner { padding-bottom: 3rem; padding-left: calc(60px + 2rem); } /* 对齐文字 */
+        .acc-inner ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 1.05rem; margin-top: 1rem; margin-bottom: 2rem;}
+        .acc-inner li { margin-bottom: 0.8rem; }
+        
+        /* 手风琴内部画廊 */
+        .gallery-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-snap-type: x mandatory; }
+        .gallery-container::-webkit-scrollbar { display: none; }
+        .gallery-container figure { flex: 0 0 70%; scroll-snap-align: start; }
+        @media (min-width: 768px) { .gallery-container figure { flex: 0 0 45%; } }
+        .gallery-container img { width: 100%; height: 220px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-color);}
+
+        /* ==========================================================
+           [5] 其他模块复用调整
+           ========================================================== */
+        /* AI Demo 动态卡片 */
+        .ai-demo-card { 
+            background: var(--surface-color); border: 1px solid var(--border-color); 
+            padding: 4rem; border-radius: 24px; color: var(--text-main); position: relative; overflow: hidden;
+            display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; align-items: center;
+        }
+        .browser-mockup { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-color); }
+        .browser-header { height: 35px; background: rgba(255,255,255,0.05); display: flex; align-items: center; padding-left: 15px; gap: 8px; border-bottom: 1px solid var(--border-color);}
+        .browser-dot { width: 12px; height: 12px; border-radius: 50%; background: #555; }
+        .browser-dot:nth-child(1) { background: #ff5f56; }
+        .browser-dot:nth-child(2) { background: #ffbd2e; }
+        .browser-dot:nth-child(3) { background: #27c93f; }
+        .browser-mockup iframe { width: 100%; height: 420px; border: none; display: block; background: #fff;}
+
+        /* 起源故事：横向卡片 */
+        .origin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .origin-card { background: var(--surface-color); padding: 2.5rem; border-radius: 20px; border: 1px solid var(--border-color); }
+        .origin-card h4 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main); }
+        .origin-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-top: 1.5rem; border: 1px solid var(--border-color);}
+
+        @media (max-width: 900px) {
+            .hero { flex-direction: column-reverse; padding-top: 2rem; min-height: auto; gap: 2rem;}
+            .hero-left, .hero-right { width: 100%; }
+            .hero-name { font-size: 15vw; left: 0; bottom: -5%; }
+            .floating-nav { width: 90%; justify-content: space-between; gap: 10px; padding: 0.8rem 1rem;}
+            .nav-brand { display: none; }
+            .poster-card { flex-direction: column; padding: 2rem; }
+            .poster-visual { width: 100%; height: 200px; margin-top: 2rem; }
+            .drawer { width: 100%; }
+            .acc-title-area { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .acc-inner { padding-left: 0; }
+            .origin-grid { grid-template-columns: 1fr; }
+            .ai-demo-card { grid-template-columns: 1fr; padding: 2rem 1.5rem; gap: 2rem; }
+            .browser-mockup iframe { height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="floating-nav">
+        <div class="nav-brand">Liyi.</div>
+        <a href="#hero" class="nav-link">Intro</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="https://www.linkedin.com/in/liyi-gao" target="_blank" class="nav-link" style="color: var(--accent); font-weight: 600;">LinkedIn ↗</a>
+    </nav>
+
+    <div class="marquee-bg">BUILD BRANDS • SOLVE PROBLEMS • CONSUMER CENTRIC • BUILD BRANDS • </div>
+
+    <header class="hero section-wrapper" id="hero">
+        <div class="hero-left reveal">
+            <div class="availability-badge">Audencia PGE | Internship for gap year starting July 2026</div>
+            
+            <div class="hero-text">
+                <h1>The Evolution of a<br><span style="color: var(--accent);">Brand Builder.</span></h1>
+                <p>Dedicated to translating deep <strong>Consumer Insights</strong> into impactful <strong>Go-To-Market strategies</strong>. I aspire to build brands with depth and style, bridging the gap between product innovation and brand storytelling to solve real human needs.</p>
+            </div>
+        </div>
+        <div class="hero-right reveal delay-1">
+            <div class="hero-image-wrapper">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad689ba1d37.webp" alt="Liyi Gao">
+            </div>
+            <div class="hero-name">Liyi GAO</div>
+        </div>
+    </header>
+
+    <section class="section-wrapper reveal" id="projects">
+        <h2 class="heading-font" style="font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 2rem;">Flagship Project</h2>
+        
+        <div class="poster-card" onclick="toggleDrawer('o2o-drawer')">
+            <div class="poster-content">
+                <h3>Architecting a Campus O2O Network</h3>
+                <p>A zero-to-one digital ecosystem blending online ordering, offline delivery, and private-domain CRM.</p>
+                <div class="explore-btn">Click to Explore <span>↗</span></div>
+            </div>
+            <div class="poster-visual">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="O2O Cover">
+            </div>
+        </div>
+    </section>
+
+    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer('o2o-drawer')"></div>
+    <div class="drawer" id="o2o-drawer">
+        <div class="drawer-header">
+            <h4 style="font-size: 1.5rem; color: var(--accent);">Project Details</h4>
+            <button class="drawer-close" onclick="toggleDrawer('o2o-drawer')">×</button>
+        </div>
+        <div class="drawer-content">
+            <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa31d4774d.webp" alt="Logo" style="width: 60px; border-radius: 12px; margin-bottom: 1rem;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Campus O2O Retail Network</h2>
+            
+            <ul style="padding-left: 1.2rem; color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2rem;">
+                <li style="margin-bottom: 1rem;"><strong>Founded</strong> a digital business ecosystem with online ordering and offline delivery, successfully scaling from fresh fruit to high-margin by-products.</li>
+                <li style="margin-bottom: 1rem;"><strong>Directed</strong> end-to-end operations, taking full ownership of procurement, SKU selection, team coordination, and customer service.</li>
+                <li style="margin-bottom: 1rem;"><strong>Forged</strong> strategic partnerships with student clubs and local coffee shops, securing offline pop-up spaces.</li>
+                <li><strong>Designed</strong> high-conversion promotional materials, managing 2 active private-domain communities (1,000+ members).</li>
+            </ul>
+
+            <div class="data-grid">
+                <div>
+                    <div class="data-highlight">400+</div>
+                    <div class="data-label">Monthly Users</div>
+                </div>
+                <div>
+                    <div class="data-highlight">80%</div>
+                    <div class="data-label">Repurchase Rate</div>
+                </div>
+                <div>
+                    <div class="data-highlight"><5%</div>
+                    <div class="data-label">Waste Rate</div>
+                </div>
+            </div>
+
+            <div class="drawer-gallery">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa32c18309.webp" alt="Packaging">
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa54463452.webp" alt="Backend">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa5482c56e.webp" alt="UI" style="margin: 0;">
+                    <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa55a4e555.webp" alt="CRM" style="margin: 0;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="section-wrapper reveal" id="experience">
+        <h2 class="heading-font" style="font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 2rem;">Professional Arsenal</h2>
+        
+        <div class="accordion-container">
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="acc-title-area">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb263e823.webp" alt="WL" class="acc-logo">
+                        <div>
+                            <div class="acc-meta">Mar 2025 - Jun 2025 | Canton</div>
+                            <h4>Wealthfields Lohmann (FMCG)</h4>
+                        </div>
+                    </div>
+                    <div class="acc-icon">+</div>
+                </div>
+                <div class="accordion-content-wrapper">
+                    <div class="accordion-content">
+                        <div class="acc-inner">
+                            <p style="font-weight: 500; color: var(--text-main);">Focus: 360° Brand Partnerships & Go-to-Market</p>
+                            <ul>
+                                <li><strong>Orchestrated</strong> complex <strong>offline marathon activations</strong>, overseeing booth construction, event staff allocation, and crowd flow routing.</li>
+                                <li><strong>Managed</strong> partner <strong>MCN</strong> agencies to synchronize on-the-ground events with <strong>online live-streaming</strong> (50k+ viewers).</li>
+                                <li><strong>Elevated</strong> ROI from <strong>0.2 to 1.0+</strong> via rigorous audience-content matching.</li>
+                            </ul>
+                            <div class="gallery-container">
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3c7db80.webp"></figure>
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac2f76d0b.webp"></figure>
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/06/69aaac3780c84.webp"></figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="acc-title-area">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a0adf8.webp" alt="MMA" class="acc-logo">
+                        <div>
+                            <div class="acc-meta">Jan 2023 - Aug 2023 | Canton</div>
+                            <h4>MMA Brand Services</h4>
+                        </div>
+                    </div>
+                    <div class="acc-icon">+</div>
+                </div>
+                <div class="accordion-content-wrapper">
+                    <div class="accordion-content">
+                        <div class="acc-inner">
+                            <p style="font-weight: 500; color: var(--text-main);">Focus: Product Lifecycle Management & E-Commerce</p>
+                            <ul>
+                                <li><strong>Managed</strong> the end-to-end <strong>product lifecycle</strong> for new Amazon SKUs, translating market trends into actionable strategies.</li>
+                                <li><strong>Engineered</strong> an analysis model mapped to Amazon fulfillment fee tiers. <strong>Reduced logistics costs by 20-40%</strong>.</li>
+                            </ul>
+                            <div class="gallery-container">
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc460e1939.webp"></figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="acc-title-area">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69ace46132100.webp" alt="TAL" class="acc-logo">
+                        <div>
+                            <div class="acc-meta">Nov 2023 - Jun 2024 | Guangzhou</div>
+                            <h4>TAL Education Group</h4>
+                        </div>
+                    </div>
+                    <div class="acc-icon">+</div>
+                </div>
+                <div class="accordion-content-wrapper">
+                    <div class="accordion-content">
+                        <div class="acc-inner">
+                            <p style="font-weight: 500; color: var(--text-main);">Focus: EdTech & Audience Engagement</p>
+                            <ul>
+                                <li><strong>Public Speaking:</strong> Delivered high-pressure live presentations, achieving <strong>#1 performance</strong> among new instructors.</li>
+                                <li><strong>Knowledge Synthesis:</strong> Deconstructed complex Math logic into engaging content.</li>
+                                <li><strong>CRM:</strong> Secured a <strong>100% renewal rate</strong> through proactive relationship management.</li>
+                            </ul>
+                            <div class="gallery-container">
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8ad0d1f7.webp"></figure>
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acc8059fb3d.webp"></figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="acc-title-area">
+                        <img src="https://picui.ogmua.cn/s1/2026/03/08/69acbb4a08a8f.webp" alt="ACE" class="acc-logo">
+                        <div>
+                            <div class="acc-meta">Ongoing | Nantes, France</div>
+                            <h4>Audencia Entrepreneur Club (ACE)</h4>
+                        </div>
+                    </div>
+                    <div class="acc-icon">+</div>
+                </div>
+                <div class="accordion-content-wrapper">
+                    <div class="accordion-content">
+                        <div class="acc-inner">
+                            <p style="font-weight: 500; color: var(--text-main);">Focus: PR & Event Orchestration</p>
+                            <ul>
+                                <li><strong>Spearheaded</strong> communications for the "DARE" initiative, securing <strong>industry guest speakers</strong>.</li>
+                                <li><strong>Directed</strong> cross-functional collaboration across departments.</li>
+                            </ul>
+                            <div class="gallery-container">
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7b9d6766.webp"></figure>
+                                <figure><img src="https://picui.ogmua.cn/s1/2026/03/08/69acd7ba00aba.webp"></figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal">
+        <h2 class="heading-font" style="font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 2rem;">Current Exploration</h2>
+        <div class="ai-demo-card">
+            <div>
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566301faa.webp" class="doodle-sticker" style="top: -20px; left: -20px; width: 100px;" alt="Coding">
+                <h3 style="font-size: 2.2rem; margin-bottom: 1rem;">Building the Skincare Copilot</h3>
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1rem;">
+                    I treat AI as a strategic co-pilot. By translating my consumer intuition into structured logic, I rapidly coded and deployed this functional web application.
+                </p>
+                <p style="color: var(--text-muted); font-size: 1.1rem;">
+                    It is designed to solve the pain point of overwhelming choices by providing personalized routine analysis.
+                </p>
+                <a href="https://lygao-ducky.github.io/skincare_assistant/index.html" target="_blank" class="explore-btn" style="margin-top: 2rem;">
+                    Live Prototype ↗
+                </a>
+            </div>
+            <div class="browser-mockup">
+                <div class="browser-header">
+                    <div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div>
+                </div>
+                <iframe src="https://lygao-ducky.github.io/skincare_assistant/index.html" title="Demo"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-wrapper reveal">
+        <h2 class="heading-font" style="font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 2rem;">Origin Story</h2>
+        <div class="origin-grid">
+            <div class="origin-card">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566dc0467.webp" class="doodle-sticker" style="top: 10px; right: 10px; width: 80px;" alt="Doodle">
+                <span style="color: var(--accent); font-weight: 600; font-size: 0.9rem;">2013 • MVP Testing</span>
+                <h4 style="margin-top: 0.5rem; margin-bottom: 0.5rem;">Grandma's Bio Stall</h4>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Learning that reducing cognitive load with direct copywriting is the core of any transaction.</p>
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69acd58a8b1b8.webp" alt="Sign">
+            </div>
+            <div class="origin-card">
+                <img src="https://picui.ogmua.cn/s1/2026/03/08/69ad566383a3b.webp" class="doodle-sticker" style="top: 10px; right: 10px; width: 80px;" alt="Doodle">
+                <span style="color: var(--accent); font-weight: 600; font-size: 0.9rem;">2015 • DTC Validation</span>
+                <h4 style="margin-top: 0.5rem; margin-bottom: 0.5rem;">Flea Market Curation</h4>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Establishing brand identity and validating premium pricing through cohesive visual merchandising.</p>
+                <img src="https://picui.ogmua.cn/s1/2026/03/06/69aaa980687c3.webp" alt="Stationery" style="object-position: top;">
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 6rem 0 8rem 0; color: var(--text-muted); font-size: 0.9rem;">
+        <p>Crafted with AI & Human Intuition. © 2026 Liyi GAO.</p>
+    </footer>
+
+    <script>
+        // 1. Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 50) { reveals[i].classList.add("active"); }
+            }
+        }
+        window.addEventListener("scroll", reveal); reveal();
+
+        // 2. Drawer Logic (抽屉开关)
+        function toggleDrawer(id) {
+            const drawer = document.getElementById(id);
+            const overlay = document.getElementById('drawer-overlay');
+            const body = document.body;
+            
+            if(drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                overlay.classList.remove('open');
+                body.classList.remove('drawer-open');
+            } else {
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+                body.classList.add('drawer-open');
+            }
+        }
+
+        // 3. Accordion Logic (手风琴开关)
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            // 互斥展开（如果想同时展开多个，注释掉下面这段）
+            const allItems = document.querySelectorAll('.accordion-item');
+            allItems.forEach(el => {
+                if (el !== item) el.classList.remove('active');
+            });
+            // 切换当前
+            item.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
